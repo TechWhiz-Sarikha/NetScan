@@ -1,0 +1,200 @@
+/* General Styling */ 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: monospace;
+}
+
+body {
+    background-color: #111;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Header Styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #111;
+    border-bottom: 2px solid #33ff33;
+}
+
+/* Navigation */
+.nav-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Navigation Links */
+nav {
+    display: flex;
+    gap: 15px;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px; /* Default font size */
+}
+
+/* Login Button */
+.login-button {
+    background-color: #33ff33;
+    color: #000;
+    padding: 6px 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.login-button:hover {
+    background-color: #28cc28;
+}
+
+/* Settings Icon */
+.settings-icon {
+    width: 32px;
+    height: 32px;
+    filter: brightness(70%);
+    transition: filter 0.3s;
+}
+
+.settings-icon:hover {
+    filter: brightness(100%) saturate(200%);
+}
+
+/* Scan Page Content */
+.scan-container {
+    text-align: left;
+    padding: 40px 20px;
+    width: 80%;  /* Adjusted width */
+    max-width: 900px; /* Prevents it from becoming too wide on large screens */
+    margin: 0 auto;
+}
+
+.scan-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.green-text {
+    color: #33ff33;
+}
+
+/* Scan Box */
+.scan-box {
+    background-color: #222;
+    padding: 20px;
+    width: 100%;
+    margin: 0 auto 20px;
+    border-radius: 8px;
+}
+
+.scan-box label {
+    display: block;
+    margin: 10px 0 5px;
+    font-size: 16px;
+}
+
+.scan-box input, .scan-box select {
+    width: 100%;
+    padding: 10px;
+    background-color: #111;
+    border: 2px solid #33ff33;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.start-scan {
+    width: 100%;
+    background-color: #33ff33;
+    border: none;
+    padding: 12px;
+    margin-top: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.start-scan:hover {
+    background-color: #28cc28;
+}
+
+/* Nmap Command Box */
+.command-box {
+    background-color: #222;
+    padding: 15px;
+    width: 100%;
+    margin: 0 auto 20px;
+    border-radius: 8px;
+}
+
+.command-box p {
+    font-size: 18px;
+}
+
+.command {
+    background-color: #111;
+    padding: 10px;
+    border-radius: 5px;
+    color: #33ff33;
+    font-weight: bold;
+}
+
+/* Scan Results */
+.results-box {
+    background-color: #222;
+    padding: 30px;  /* Increased padding for bigger box */
+    width: 100%;
+    margin: 20px auto 0;  /* Added top margin to give space above */
+    border-radius: 8px;
+    min-height: 300px;  /* Increased the height of the results box */
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Ensures both the text and button are aligned on the same level */
+}
+
+.results-header p {
+    margin: 0;
+    padding-bottom: 30px; /* Added padding to push the text slightly above */
+    font-size: 16px;  /* Set to match the Scan Type font size */
+    font-weight: bold; /* Makes the text bold */
+}
+
+/* Import Results Button */
+.import-button {
+    background-color: #222;  /* Change to match the box background color */
+    border: 2px solid #33ff33; /* Green border */
+    color: #33ff33; /* Green text */
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+    margin-bottom: 20px; /* Added margin to create space below */
+}
+
+.import-button:hover {
+    background-color: #33ff33; /* Green background */
+    color: #000; /* Black text */
+}
+
+.results-content {
+    background-color: #111;
+    padding: 10px;
+    border-radius: 5px;
+    color: #33ff33;
+    height: 200px;  /* Ensures the results content box is taller */
+    overflow-y: auto;  /* Adds a scroll bar if content exceeds the height */
+}

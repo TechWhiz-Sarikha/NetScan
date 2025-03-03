@@ -1,0 +1,232 @@
+/* General Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: monospace;
+}
+
+body {
+    background-color: #111;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Header Styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #111;
+    border-bottom: 2px solid #33ff33;
+}
+
+/* Navigation and Settings Container */
+.nav-container {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between links and settings icon */
+}
+
+/* Navigation Links */
+nav {
+    display: flex;
+    gap: 15px;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px; /* Default font size */
+}
+
+/* Settings Icon */
+.settings-icon {
+    width: 32px;
+    height: 32px;
+    filter: brightness(70%);
+    transition: filter 0.3s ease-in-out;
+}
+
+.settings-icon:hover {
+    filter: brightness(100%) saturate(200%);
+}
+
+/* Increase font size for body content only */
+.about-section, 
+.team-section, 
+.contact-section {
+    font-size: 18px; /* Increased from 16px */
+}
+
+/* Ensure paragraphs get updated size */
+.about-section p, 
+.team-section p, 
+.contact-section p {
+    font-size: 18px;
+}
+
+/* About Section */
+.about-section {
+    text-align: center;
+    margin-top: 40px;
+    max-width: 60%; /* Reduced width */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.green-text {
+    color: #33ff33;
+}
+
+.half-white-text {
+    color: #cccccc;
+}
+
+.light-blue-text {
+    color: #66ccff;
+}
+
+/* Team Section */
+.team-section {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.team-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.team-member {
+    background-color: #222;
+    border: 2px solid #33ff33;
+    padding: 25px;
+    width: 280px; /* Increased box size */
+    text-align: center;
+    border-radius: 5px;
+}
+
+.avatar {
+    width: 80px; /* Bigger avatar */
+    height: 80px;
+    background-color: #333;
+    border-radius: 50%;
+    margin: 10px auto;
+}
+
+/* Contact Form */
+.contact-section {
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* Adjust the width of the Contact Us box */
+.terminal-box {
+    background-color: #111;
+    border: 2px solid #33ff33;
+    padding: 20px;
+    width: 40%; /* Adjust the width to make the box smaller */
+    margin: auto;
+    text-align: left;
+}
+
+
+.terminal-box input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #222;
+    border: 1px solid #33ff33;
+    color: white;
+}
+
+/* Adjust the height of the Message box */
+.terminal-box textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #222;
+    border: 1px solid #33ff33;
+    color: white;
+    height: 150px; /* Increased height for 5 lines */
+    resize: vertical; /* Allows the user to resize vertically */
+}
+
+/* Send Message Button */
+.terminal-box button {
+    background-color: #222; /* Dark background color */
+    color: white;  /* Text color */
+    padding: 12px;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;  /* Increased font size */
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Button Hover Effect */
+.terminal-box button:hover {
+    background-color: #33ff33;  /* Green background on hover */
+    color: black;  /* Text color changes to black */
+}
+
+
+/* Footer */
+footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    background-color: #111;
+    border-top: 2px solid #33ff33;
+    position: relative;
+    margin-top: 40px; /* Added margin to create space between the contact section and footer */
+}
+
+
+/* Social Icons */
+.social-icons {
+    position: absolute;
+    left: 20px;
+    top: 10px;
+    display: flex;
+    gap: 15px;
+}
+
+.social-img {
+    width: 28px;
+    height: 28px;
+    filter: brightness(70%);  /* Makes image half-white */
+    transition: filter 0.3s ease-in-out;
+}
+
+.social-img:hover {
+    filter: brightness(100%) saturate(200%);
+}
+
+/* Footer Links */
+.footer-links {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+}
+
+.footer-links a {
+    color: #ffffff;
+    margin-left: 15px;
+    text-decoration: none;
+}
+
+/* Footer Text */
+.footer-text {
+    color: #cccccc;
+    font-size: 14px;
+    margin-top: 20px;
+    text-align: center;
+}

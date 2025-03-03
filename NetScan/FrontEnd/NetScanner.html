@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetScanner</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <!-- Header with logo -->
+    <header>
+        <h1 class="logo"><span class="green-text">NetScanner>_</span></h1>
+        
+        <!-- Navigation Menu -->
+        <div class="nav-container">
+            <nav>
+                <a href="#">Home</a>
+                <a href="Scan.html">Scan</a>
+                <a href="#">AI Assistant</a>
+                <a href="login.html">Login</a>  <!-- Login link to redirect to login page -->
+                <a href="#">User Guide</a>
+                <a href="About.html">About</a>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 class="netscanner-text">NetScanner</h1>
+        <h2 class="title">Automate Your Network Scanning with Ease</h2>
+        <!-- Quick Scan Button -->
+        <button class="scan-button" onclick="location.href='Quickscan.html'">⚡ Quick Scan</button>
+
+
+        <!-- Feature Section -->
+        <div class="features">
+            <div class="feature-box">
+                <h3 class="feature-heading">🔒 Advanced Security</h3>
+                <p class="feature-text">Comprehensive port scanning and vulnerability assessment tools to protect your network infrastructure.</p>
+            </div>
+            <div class="feature-box">
+                <h3 class="feature-heading">🤖 AI-Powered Analysis</h3>
+                <p class="feature-text">Intelligent threat detection and automated vulnerability assessment using cutting-edge AI technology.</p>
+            </div>
+            <div class="feature-box">
+                <h3 class="feature-heading">📡 Real-Time Monitoring</h3>
+                <p class="feature-text">Live network status updates and instant alerts for potential security threats and vulnerabilities.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="social-icons">
+            <a href="#"><img src="Twitter.png" alt="Twitter" class="social-img"></a>
+            <a href="#"><img src="Github.png" alt="GitHub" class="social-img"></a>
+            <a href="#"><img src="Linkedin.png" alt="LinkedIn" class="social-img"></a>
+        </div>
+        
+        <div class="footer-links">
+            <a href="#">Terms_of_Service.txt</a>
+            <a href="#">Privacy_Policy.txt</a>
+        </div>
+
+        <p class="footer-text">> echo "<span class="half-white-text">© 2025 NetScanner. All rights reserved.</span>"</p>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const isLoggedIn = localStorage.getItem("loggedIn"); // Check login status
+    
+            document.querySelectorAll("nav a").forEach(link => {
+                if (link.getAttribute("href") === "Scan.html") {
+                    link.addEventListener("click", function (event) {
+                        if (!isLoggedIn) {
+                            event.preventDefault(); // Prevent navigation
+                            alert("You must be logged in to access this page.");
+                            window.location.href = "login.html"; // Redirect to login page
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup - NetScanner</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+    <header>
+        <h1 class="logo"><span class="green-text">NetScanner>_</span></h1>
+        <nav>
+            <a href="NetScanner.html">Home</a>
+            <a href="Scan.html">Scan</a>
+            <a href="#">AI Assistant</a>
+            <a href="login.html">Login</a>
+            <a href="#">User Guide</a>
+            <a href="About.html">About</a>
+        </nav>
+    </header>
+
+    <div class="login-container">
+        <div class="login-box">
+            <h2 class="login-box-header">Create Account</h2>
+
+            <form id="signup-form">
+                <div class="input-container">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+
+                <div class="input-container">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="input-container">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <div class="input-container">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="confirm-password" required>
+                </div>
+
+                <button type="submit" class="login-submit">Signup</button>
+                <div id="error-message" style="color: red; margin-top: 10px;"></div>
+
+                <div class="links">
+                    <a href="login.html">Already have an account? Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("signup-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+            const errorMessage = document.getElementById("error-message");
+
+            errorMessage.textContent = ""; // Clear previous errors
+
+            if (password !== confirmPassword) {
+                errorMessage.textContent = "Passwords do not match!";
+                return;
+            }
+
+            try {
+                let response = await fetch("http://127.0.0.1:5000/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        username, 
+                        email, 
+                        password, 
+                        confirm_password: confirmPassword 
+                    }),
+                });
+
+                let result = await response.json();
+
+                if (response.ok) {
+                    alert("Signup successful! Redirecting to login page...");
+                    window.location.href = result.redirect;
+                } else {
+                    errorMessage.textContent = result.error;
+                }
+            } catch (error) {
+                console.error("Signup Error:", error);
+                errorMessage.textContent = "Server error. Please try again later.";
+            }
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const isLoggedIn = localStorage.getItem("loggedIn"); // Check login status
+    
+            document.querySelectorAll("nav a").forEach(link => {
+                if (link.getAttribute("href") === "Scan.html") {
+                    link.addEventListener("click", function (event) {
+                        if (!isLoggedIn) {
+                            event.preventDefault(); // Prevent navigation
+                            alert("You must be logged in to access this page.");
+                            window.location.href = "login.html"; // Redirect to login page
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | NetScanner</title>
+    <link rel="stylesheet" href="about.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header>
+        <h1 class="logo"><span class="green-text">NetScanner>_</span></h1>
+        
+        <!-- Navigation Menu -->
+        <div class="nav-container">
+            <nav>
+                <a href="NetScanner.html">Home</a>
+                <a href="Scan.html">Scan</a>
+                <a href="#">AI Assistant</a>
+                <a href="login.html">Login</a>  <!-- Login link to redirect to login page -->
+                <a href="#">User Guide</a>
+                <a href="About.html">About</a>
+            </nav>
+    
+            <!-- Settings Icon -->
+            <a href="#"><img src="Settings.png" alt="Settings" class="settings-icon"></a>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <h1 class="green-text">About NetScanner</h1>
+        <p class="half-white-text">
+            Our mission is to empower organizations and security professionals
+            with advanced network scanning capabilities, making the digital world
+            more secure through innovative technology and comprehensive vulnerability assessment tools.
+        </p>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+        <h2 class="green-text">Our Team</h2>
+        <div class="team-container">
+            <div class="team-member">
+                <div class="avatar"></div>
+                <h3 class="light-blue-text">Sri Gomathi R</h3>
+                <p class="half-white-text"></p>
+                <p class="half-white-text"></p>
+            </div>
+            <div class="team-member">
+                <div class="avatar"></div>
+                <h3 class="light-blue-text">Sarikha S</h3>
+                <p class="half-white-text"></p>
+                <p class="half-white-text"></p>
+            </div>
+            <div class="team-member">
+                <div class="avatar"></div>
+                <h3 class="light-blue-text">Aruna Varshini S</h3>
+                <p class="half-white-text"></p>
+                <p class="half-white-text"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section class="contact-section">
+        <h2 class="green-text">Contact Us</h2>
+        <form class="contact-form">
+            <div class="terminal-box">
+                <label>Email:</label>
+                <input type="email" placeholder="Enter your email">
+                <label>Message:</label>
+                <textarea placeholder="Type your message"></textarea>
+                <button type="submit">Send Message</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="social-icons">
+            <a href="#"><img src="Twitter.png" alt="Twitter" class="social-img"></a>
+            <a href="#"><img src="Github.png" alt="GitHub" class="social-img"></a>
+            <a href="#"><img src="Linkedin.png" alt="LinkedIn" class="social-img"></a>
+        </div>
+
+        <div class="footer-links">
+            <a href="#">Terms_of_Service.txt</a>
+            <a href="#">Privacy_Policy.txt</a>
+        </div>
+
+        <p class="footer-text">> echo "<span class="half-white-text">© 2025 NetScanner. All rights reserved.</span>"</p>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const isLoggedIn = localStorage.getItem("loggedIn"); // Check login status
+    
+            document.querySelectorAll("nav a").forEach(link => {
+                if (link.getAttribute("href") === "Scan.html") {
+                    link.addEventListener("click", function (event) {
+                        if (!isLoggedIn) {
+                            event.preventDefault(); // Prevent navigation
+                            alert("You must be logged in to access this page.");
+                            window.location.href = "login.html"; // Redirect to login page
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+

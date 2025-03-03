@@ -1,0 +1,175 @@
+/* General Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: monospace;
+}
+
+body {
+    background-color: #111;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Header Styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #111;
+    border-bottom: 2px solid #33ff33;
+}
+
+/* Navigation and Settings Container */
+.nav-container {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between links and settings icon */
+}
+
+/* Navigation Links */
+nav {
+    display: flex;
+    gap: 15px;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px; /* Default font size */
+}
+
+/* Settings Icon */
+.settings-icon {
+    width: 32px;
+    height: 32px;
+    filter: brightness(70%);
+    transition: filter 0.3s ease-in-out;
+}
+
+.settings-icon:hover {
+    filter: brightness(100%) saturate(200%);
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.netscanner-text {
+    font-size: 32px;
+    color: #33ff33;
+    margin-bottom: 10px;
+}
+
+.title {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #66ccff; /* Light Blue */
+}
+
+.green-text {
+    color: #33ff33;
+}
+
+/* Quick Scan Button */
+.scan-button {
+    background-color: #000; /* Black background */
+    border: 2px solid #33ff33;
+    padding: 14px 28px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 12px; /* Soft rounded edges */
+    color: #33ff33; /* Green text */
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.scan-button:hover {
+    background-color: #33ff33; /* Turns green on hover */
+    color: #000; /* Text turns black */
+}
+
+/* Features Section */
+.features {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px; /* Moves feature boxes down */
+}
+
+.feature-box {
+    background-color: #000; /* Black background */
+    border: 2px solid #33ff33;
+    padding: 40px 30px;
+    width: 400px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.feature-heading {
+    font-size: 24px;
+    font-weight: bold;
+    color: #66ccff; /* Light Blue */
+}
+
+.feature-text {
+    font-size: 18px;
+    color: #cccccc; /* Half-white text */
+    line-height: 1.5;
+}
+
+/* Footer */
+footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    background-color: #111;
+    border-top: 2px solid #33ff33;
+    position: relative;
+}
+
+/* Social Icons */
+.social-icons {
+    position: absolute;
+    left: 20px;
+    top: 10px;
+    display: flex;
+    gap: 15px;
+}
+
+.social-img {
+    width: 28px;
+    height: 28px;
+    filter: brightness(70%);  /* Makes image half-white */
+    transition: filter 0.3s ease-in-out;
+}
+
+.social-img:hover {
+    filter: brightness(100%) saturate(200%); /* Turns bright on hover */
+}
+
+/* Footer Links */
+.footer-links {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+}
+
+.footer-links a {
+    color: #ffffff;
+    margin-left: 15px;
+    text-decoration: none;
+}
+
+.footer-text {
+    color: #cccccc;
+    font-size: 14px;
+    margin-top: 20px;
+}

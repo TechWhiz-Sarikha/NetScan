@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan - NetScanner</title>
+    <link rel="stylesheet" href="scan.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1 class="logo"><span class="green-text">NetScanner>_</span></h1> 
+        <div class="nav-container">
+            <nav>
+                <a href="NetScanner.html">Home</a>
+                <a href="#">Scan</a>
+                <a href="#">AI Assistant</a>
+                <a href="#">User Guide</a>
+                <a href="About.html">About</a>
+            </nav>
+            <!-- Login button that redirects to the login page -->
+            <a href="login.html"><button class="login-button">Login</button></a>
+        </div>
+    </header>
+
+    <!-- Scan Section -->
+    <div class="scan-container">
+        <h1 class="scan-title"><span class="green-text">Scan</span> Your Network</h1>
+        
+        <div class="scan-box">
+            <label for="ip-address">Target IP Address</label>
+            <input type="text" id="ip-address" placeholder="Enter single IP, range, or multiple IPs separated by commas">
+
+            <label for="scan-type">Scan Type</label>
+            <select id="scan-type">
+                <option value="" disabled selected>Select a scan type</option>
+                <option value="ping">Ping Scan - Simple ping sweep to discover live hosts</option>
+                <option value="version">Version Detection - Detect service versions on open ports</option>
+                <option value="aggressive">Aggressive Scan - Enable OS detection and version scanning</option>
+            </select>
+
+            <button class="start-scan">Start Scan</button>
+        </div>
+
+        <div class="command-box">
+            <p>Generated Nmap Command:</p>
+            <div class="command" id="nmap-command">nmap [target]</div>
+        </div>
+
+        <div class="results-box">
+            <div class="results-header">
+                <p>Scan Results</p>
+                <button class="import-button">Import Results</button>
+            </div>
+            <div class="results-content">Results will appear here...</div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to dynamically update the Nmap command
+        const ipInput = document.getElementById('ip-address');
+        const scanTypeSelect = document.getElementById('scan-type');
+        const nmapCommandText = document.getElementById('nmap-command');
+
+        // Function to update the Nmap command based on user input
+        function updateNmapCommand() {
+            const ipValue = ipInput.value;
+
+            if (ipValue) {
+                // Only show nmap command with the IP address
+                let scanCommand = 'nmap ' + ipValue;
+                nmapCommandText.textContent = scanCommand; // Update the command text
+            }
+        }
+
+        // Add event listeners to update command when input changes
+        ipInput.addEventListener('input', updateNmapCommand);
+        scanTypeSelect.addEventListener('change', updateNmapCommand);
+        
+    </script>
+
+</body>
+</html>
