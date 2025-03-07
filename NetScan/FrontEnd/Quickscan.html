@@ -19,70 +19,87 @@
                 <a href="#">User Guide</a>
                 <a href="About.html">About</a>
             </nav>
-            <!-- Login button that redirects to the login page -->
             <a href="login.html"><button class="login-button">Login</button></a>
         </div>
     </header>
         
     <!-- Scan Section -->
     <div class="scan-container">
-        <h1 class="scan-title"><span class="green-text">Quick Scan</span><span class="green-text"> Your Network</span></h1>
+        <h1 class="scan-title"><span class="green-text">Network Scan</span></h1>
         <div class="scan-box">
             <label for="ip">Enter IP Address:</label>
-
             <input type="text" id="ip" placeholder="192.168.1.1">
+
+            <label for="scanType">Select Scan Type:</label>
+            <select id="scanType">
+                <option value="quickscan">Quick Scan</option>
+                <option value="intense">Intense Scan</option>
+                <option value="intense_udp">Intense Scan + UDP</option>
+                <option value="ping">Ping Scan</option>
+                <option value="all_tcp">All TCP Ports Scan</option>
+                <option value="no_ping">Intense Scan (No Ping)</option>
+                <option value="traceroute">Quick Traceroute</option>
+                <option value="comprehensive">Slow Comprehensive Scan</option>
+            </select>
         </div>
-        <button class="start-scan" onclick="startQuickScan()">Start Quick Scan</button>
+        <button class="start-scan" onclick="startScan()">Start Scan</button>
         
         <div class="results-box">
-            <div class="results-header">
-            </div>
+            <div class="results-header"></div>
             <div class="results-content">Results will appear here... 
                 <br><br>
                 <pre id="result"></pre>
-                </p>
             </div>
         </div>
     </div>
-    <script>
-        function startQuickScan() {
-            const ip = document.getElementById("ip").value.trim();
-            const resultDiv = document.getElementById("result");
 
+    <script>
+        function startScan() {
+            const ip = document.getElementById("ip").value.trim();
+            const scanType = document.getElementById("scanType").value;
+            const resultDiv = document.getElementById("result");
+    
             if (!ip) {
                 alert("Please enter a valid IP address.");
                 return;
             }
-
-            fetch("http://127.0.0.1:5000/quickscan", {
+            resultDiv.innerHTML = "<strong>Scanning...</strong>";
+    
+            fetch("http://127.0.0.1:5000/scan", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ip })
+                body: JSON.stringify({ ip, scanType })
             })
             .then(response => response.json())
             .then(data => {
-                resultDiv.textContent = data.output || data.error;
+                if (data.error) {
+                    resultDiv.innerHTML = `<span style="color:red;">Error: ${data.error}</span>`;
+                } else {
+                    resultDiv.innerHTML = `<strong>Scan Type: ${scanType}</strong><br><pre>${data.output}</pre>`;
+                }
             })
             .catch(error => {
                 console.error("Error:", error);
-                resultDiv.textContent = "An error occurred during scanning.";
+                resultDiv.innerHTML = "<span style='color:red;'>An error occurred during scanning.</span>";
             });
         }
+    
         document.addEventListener("DOMContentLoaded", function () {
-            const isLoggedIn = localStorage.getItem("loggedIn"); // Check login status
+            const isLoggedIn = localStorage.getItem("loggedIn");
     
             document.querySelectorAll("nav a").forEach(link => {
                 if (link.getAttribute("href") === "Scan.html") {
                     link.addEventListener("click", function (event) {
                         if (!isLoggedIn) {
-                            event.preventDefault(); // Prevent navigation
+                            event.preventDefault();
                             alert("You must be logged in to access this page.");
-                            window.location.href = "login.html"; // Redirect to login page
+                            window.location.href = "login.html";
                         }
                     });
                 }
             });
         });
     </script>
+    
 </body>
-</html> 
+</html>
