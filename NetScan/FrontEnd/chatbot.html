@@ -3,143 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .chat-container {
-            width: 400px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chat-header {
-            background: #007bff;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 18px;
-        }
-
-        .chat-box {
-            height: 400px;
-            overflow-y: auto;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .message {
-            padding: 10px;
-            margin: 5px;
-            border-radius: 5px;
-            max-width: 80%;
-        }
-
-        .user-message {
-            background: #007bff;
-            color: white;
-            align-self: flex-end;
-        }
-
-        .bot-message {
-            background: #e0e0e0;
-            color: black;
-            align-self: flex-start;
-        }
-
-        .chat-input {
-            display: flex;
-            border-top: 1px solid #ccc;
-            padding: 10px;
-        }
-
-        .chat-input input {
-            flex: 1;
-            padding: 8px;
-            border: none;
-            outline: none;
-            font-size: 16px;
-        }
-
-        .chat-input button {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        .chat-input button:hover {
-            background: #0056b3;
-        }
-    </style>
+    <title>Nmap PDF Analyzer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-<body>
-    <div class="chat-container">
-        <div class="chat-header">AI Chatbot</div>
-        <div class="chat-box" id="chatBox"></div>
-        <div class="chat-input">
-            <input type="text" id="userInput" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
-            <button onclick="sendMessage()">Send</button>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center">Nmap Scan Report Analyzer & Chat</h1>
+        
+        <div class="card p-4">
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="file" class="form-label">Upload your Nmap scan report (PDF)</label>
+                    <input class="form-control" type="file" id="file" name="file" accept="application/pdf">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="uploadPDF()">Upload PDF</button>
+            </form>
+        </div>
+        
+        <div class="mt-4">
+            <h3>Extracted Report Text</h3>
+            <textarea id="reportText" class="form-control" rows="10" readonly></textarea>
+        </div>
+        
+        <div class="mt-4">
+            <h3>Ask a Question</h3>
+            <input type="text" id="question" class="form-control" placeholder="Type your question about the scan report...">
+            <button class="btn btn-success mt-3" onclick="askQuestion()">Get Answer</button>
+        </div>
+        
+        <div class="mt-4">
+            <h3>Answer</h3>
+            <textarea id="answer" class="form-control" rows="5" readonly></textarea>
         </div>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("userInput").focus();
-        });
-
-        function sendMessage() {
-            const userInput = document.getElementById("userInput").value.trim();
-            if (userInput === "") return;
-
-            displayMessage(userInput, "user");
-
-            fetch("http://127.0.0.1:5000/chat", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: userInput })
+        function uploadPDF() {
+            const formData = new FormData(document.getElementById('uploadForm'));
+            
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
-                const botReply = data.reply || "Error: No response from AI.";
-                displayMessage(botReply, "bot");
+                if (data.text) {
+                    document.getElementById('reportText').value = data.text;
+                } else {
+                    alert('Error: ' + data.error);
+                }
             })
-            .catch(error => {
-                console.error("Error:", error);
-                displayMessage("Error: Unable to reach the AI server.", "bot");
-            });
-
-            document.getElementById("userInput").value = "";
+            .catch(error => console.error('Error:', error));
         }
 
-        function displayMessage(message, sender) {
-            const chatBox = document.getElementById("chatBox");
-            const msgDiv = document.createElement("div");
-            msgDiv.classList.add("message", sender === "user" ? "user-message" : "bot-message");
-            msgDiv.textContent = message;
-            chatBox.appendChild(msgDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-
-        function handleKeyPress(event) {
-            if (event.key === "Enter") {
-                sendMessage();
-            }
+        function askQuestion() {
+            const text = document.getElementById('reportText').value;
+            const question = document.getElementById('question').value;
+            
+            fetch('/ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, question })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.answer) {
+                    document.getElementById('answer').value = data.answer;
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
         }
     </script>
 </body>
 </html>
+
+<!-- Let me know if you want any tweaks or enhancements to the UI! 🚀 -->

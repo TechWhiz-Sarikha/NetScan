@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Guide - NetScanner</title>
+    <link rel="stylesheet" href="userguide.css">
+    <script src="userguide_script.js" defer></script>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1 class="logo"><span class="green-text">NetScanner>_</span></h1> 
+        <div class="nav-container">
+            <nav>
+                <a href="NetScanner.html">Home</a>
+                <a href="#">Scan</a>
+                <a href="#">AI_Assistant</a>
+                <a href="UserGuide.html">User_Guide</a>
+                <a href="About.html">About</a>
+            </nav>
+            <a href="login.html"><button class="login-button">Login</button></a>
+            <img src="Settings.png" alt="Settings" class="settings-icon">
+        </div>
+    </header>
+
+    <!-- User Guide (Scan Page as Background) -->
+    <div class="scan-container">
+        <h1 class="scan-title"><span class="green-text">User Guide</span></h1>
+        
+        <div class="scan-box">
+            <label for="ip-address">Step 1: Enter Target IP Address</label>
+            <input type="text" id="ip-address" placeholder="Enter single IP, range, or multiple IPs">
+
+            <label for="scan-type">Step 2: Select a Scan Type</label>
+            <select id="scan-type">
+                <option value="" disabled selected>Select a scan type</option>
+                <option value="ping">Ping Scan - Discover live hosts</option>
+                <option value="version">Version Detection - Detect service versions</option>
+                <option value="aggressive">Aggressive Scan - Enable OS detection</option>
+            </select>
+
+            <label>Step 3: Click 'Start Scan' to Begin</label>
+            <button class="start-scan">Start Scan</button>
+        </div>
+
+        <div class="command-box">
+            <p>Generated Nmap Command:</p>
+            <div class="command" id="nmap-command">nmap [target]</div>
+        </div>
+
+        <div class="results-box">
+            <div class="results-header">
+                <p>Step 4: View Scan Results Below</p>
+                <button class="import-button">Import Results</button>
+            </div>
+            <div class="results-content">Results will appear here...</div>
+        </div>
+    </div>
+
+    <!-- Floating Navigation Guide -->
+    <div class="user-guide-overlay">
+        <h2>🔍 User Guide Navigation</h2>
+        <p id="step-text">Welcome to NetScanner! Click "Next" to begin.</p>
+
+        <div class="button-container">
+            <button id="prev-btn" onclick="prevStep()" disabled>⬅ Back</button>
+            <button id="next-btn" onclick="nextStep()">Next ➡</button>
+        </div>
+
+        <!-- Cursor Guide -->
+        <div id="animated-cursor"></div>
+    </div>
+
+</body>
+</html>
