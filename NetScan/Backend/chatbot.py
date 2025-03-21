@@ -1,4 +1,3 @@
-#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
 
 from flask import Flask, request, jsonify, send_from_directory
 import tempfile
@@ -12,7 +11,7 @@ import json
 app = Flask(__name__)
 
 # Set your OpenAI API key here
-openai.api_key = "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"  # Replace with your actual OpenAI API key
+openai.api_key = ""  # Replace with your actual OpenAI API key
 
 
 def extract_text_from_pdf(pdf_file):
