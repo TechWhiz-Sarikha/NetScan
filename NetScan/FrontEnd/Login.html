@@ -105,3 +105,92 @@
     </style>
 </body>
 </html>
+
+
+
+
+
+const chatbotButton = document.getElementById('chatbotButton');
+            const chatbotPanel = document.getElementById('chatbotPanel');
+            const closeChat = document.getElementById('closeChat');
+            const chatInput = document.getElementById('chatInput');
+            const sendMessage = document.getElementById('sendMessage');
+            const chatMessages = document.getElementById('chatMessages');
+
+            // Predefined responses for demo
+            const botResponses = [
+                "I can help you scan your network for vulnerabilities. Would you like to run a quick scan?",
+                "Sure! I can explain how port scanning works. It's a technique used to identify open ports on a network host.",
+                "Your network currently has 12 connected devices. Would you like to see details about each one?",
+                "I notice there are 3 potential vulnerabilities detected in your last scan. Would you like me to analyze them?",
+                "NetScanner uses AI to automatically detect and classify network threats based on traffic patterns.",
+                "You can upgrade to our Pro version for advanced scanning features and real-time monitoring."
+            ];
+
+            // Toggle chatbot panel
+            chatbotButton.addEventListener('click', function() {
+                if (chatbotPanel.style.display === 'flex') {
+                    chatbotPanel.style.display = 'none';
+                } else {
+                    chatbotPanel.style.display = 'flex';
+                    // Remove notification when opened
+                    const notification = document.querySelector('.notification');
+                    if (notification) {
+                        notification.style.display = 'none';
+                    }
+                }
+            });
+
+            // Close chat panel
+            closeChat.addEventListener('click', function() {
+                chatbotPanel.style.display = 'none';
+            });
+
+            // Send message function
+            function sendChatMessage() {
+                const message = chatInput.value.trim();
+                
+                if (message) {
+                    // Add user message
+                    addMessage(message, 'user');
+                    chatInput.value = '';
+                    
+                    // Simulate bot response after a delay
+                    setTimeout(() => {
+                        // Pick a random response
+                        const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
+                        // Add bot message
+                        addMessage(randomResponse, 'bot');
+}, 1000);
+}
+}
+
+// Function to add message to chat
+function addMessage(text, sender) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message');
+    messageDiv.classList.add(sender + '-message');
+    messageDiv.textContent = text;
+    chatMessages.appendChild(messageDiv);
+    
+    // Auto scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Send message on button click
+sendMessage.addEventListener('click', sendChatMessage);
+
+// Send message on Enter key
+chatInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        sendChatMessage();
+    }
+});
+
+// Add initial message after a delay to simulate bot greeting
+setTimeout(() => {
+    const notification = document.querySelector('.notification');
+    if (notification) {
+        notification.style.display = 'block';
+    }
+}, 3000);

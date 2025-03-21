@@ -1,10 +1,329 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scan - NetScanner</title>
-    <link rel="stylesheet" href="scan.css">
+    <style>
+        :root {
+            --primary-color: #00b894;
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #f5f5f5;
+            --card-border: #e0e0e0;
+            --button-hover: #00a884;
+            --header-bg: #f8f8f8;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #00b894;
+            --bg-color: #1a1a1a;
+            --text-color: #f5f5f5;
+            --card-bg: #2a2a2a;
+            --card-border: #444444;
+            --button-hover: #00d8a8;
+            --header-bg: #252525;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background-color: var(--header-bg);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .green-text {
+            color: var(--primary-color);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            position: relative;
+            padding: 0.3rem 0;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: var(--button-hover);
+        }
+
+        .login-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .login-button:hover {
+            background-color: var(--button-hover);
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background-color: #ccc;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+
+        .toggle-switch:after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            background-color: white;
+            transition: 0.3s;
+        }
+
+        .theme-toggle.active .toggle-switch {
+            background-color: var(--primary-color);
+        }
+
+        .theme-toggle.active .toggle-switch:after {
+            transform: translateX(26px);
+        }
+
+        .scan-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .scan-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.2rem;
+        }
+
+        .scan-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid var(--card-border);
+            border-radius: 4px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 184, 148, 0.2);
+        }
+
+        .start-scan {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .start-scan:hover {
+            background-color: var(--button-hover);
+        }
+
+        .results-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .results-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+        }
+
+        .results-content {
+            padding: 1.5rem;
+            min-height: 200px;
+            overflow-x: auto;
+        }
+
+        pre {
+            font-family: 'Consolas', 'Monaco', monospace;
+            white-space: pre-wrap;
+        }
+
+        .scan-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .scan-option {
+            flex: 1;
+            min-width: 200px;
+            padding: 1rem;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .scan-option:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .scan-option.selected {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 184, 148, 0.2);
+        }
+
+        .scan-option h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .scan-option p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        /* Add these styles to your existing CSS */
+.improved-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    padding-right: 2.5rem;
+}
+
+.improved-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 184, 148, 0.2);
+}
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            nav {
+                overflow-x: auto;
+                width: 100%;
+                padding-bottom: 0.5rem;
+            }
+
+            .theme-toggle {
+                margin-top: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -19,6 +338,10 @@
                 <a href="#">User Guide</a>
                 <a href="About.html">About</a>
             </nav>
+            <div class="theme-toggle" id="themeToggle">
+                <span>Dark Mode</span>
+                <div class="toggle-switch"></div>
+            </div>
             <a href="login.html"><button class="login-button">Login</button></a>
         </div>
     </header>
@@ -27,44 +350,101 @@
     <div class="scan-container">
         <h1 class="scan-title"><span class="green-text">Network Scan</span></h1>
         <div class="scan-box">
-            <label for="ip">Enter IP Address:</label>
-            <input type="text" id="ip" placeholder="192.168.1.1">
+            <label for="ip">Enter IP Address or Domain:</label>
+            <input type="text" id="ip" placeholder="192.168.1.1 or example.com">
 
-            <label for="scanType">Select Scan Type:</label>
-            <select id="scanType">
-                <option value="quickscan">Quick Scan</option>
-                <option value="intense">Intense Scan</option>
-                <option value="intense_udp">Intense Scan + UDP</option>
-                <option value="ping">Ping Scan</option>
-                <option value="all_tcp">All TCP Ports Scan</option>
-                <option value="no_ping">Intense Scan (No Ping)</option>
-                <option value="traceroute">Quick Traceroute</option>
-                <option value="comprehensive">Slow Comprehensive Scan</option>
-            </select>
+            <!-- Replace the scan-options div with this dropdown -->
+<label for="scanType">Select Scan Type:</label>
+<select id="scanType" class="improved-select">
+    <option value="quickscan">Quick Scan</option>
+    <option value="intense">Intense Scan</option>
+    <option value="intense_udp">Intense Scan + UDP</option>
+    <option value="ping">Ping Scan</option>
+    <option value="all_tcp">All TCP Ports Scan</option>
+    <option value="no_ping">Intense Scan (No Ping)</option>
+    <option value="traceroute">Quick Traceroute</option>
+    <option value="comprehensive">Slow Comprehensive Scan</option>
+</select>
+            <input type="hidden" id="scanType" value="quickscan">
         </div>
         <button class="start-scan" onclick="startScan()">Start Scan</button>
         
         <div class="results-box">
-            <div class="results-header"></div>
-            <div class="results-content">Results will appear here... 
-                <br><br>
-                <pre id="result"></pre>
+            <div class="results-header">Scan Results</div>
+            <div class="results-content">
+                <div id="result">Enter an IP address or domain and select a scan type to begin...</div>
             </div>
         </div>
     </div>
 
     <script>
+        // Theme Toggle Functionality
+        document.addEventListener("DOMContentLoaded", function() {
+            const themeToggle = document.getElementById("themeToggle");
+            const htmlElement = document.documentElement;
+            
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme === "dark") {
+                htmlElement.setAttribute("data-theme", "dark");
+                themeToggle.classList.add("active");
+            }
+            
+            themeToggle.addEventListener("click", function() {
+                if (htmlElement.getAttribute("data-theme") === "dark") {
+                    htmlElement.setAttribute("data-theme", "light");
+                    localStorage.setItem("theme", "light");
+                    themeToggle.classList.remove("active");
+                } else {
+                    htmlElement.setAttribute("data-theme", "dark");
+                    localStorage.setItem("theme", "dark");
+                    themeToggle.classList.add("active");
+                }
+            });
+            
+            // Scan Option Selection
+            const scanOptions = document.querySelectorAll(".scan-option");
+            const scanTypeInput = document.getElementById("scanType");
+            
+            // Set the first option as selected by default
+            scanOptions[0].classList.add("selected");
+            
+            scanOptions.forEach(option => {
+                option.addEventListener("click", function() {
+                    // Remove selected class from all options
+                    scanOptions.forEach(opt => opt.classList.remove("selected"));
+                    
+                    // Add selected class to clicked option
+                    this.classList.add("selected");
+                    
+                    // Update hidden input value
+                    scanTypeInput.value = this.getAttribute("data-value");
+                });
+            });
+        });
+
         function startScan() {
             const ip = document.getElementById("ip").value.trim();
-            const scanType = document.getElementById("scanType").value;
+            const scanTypeSelect = document.getElementById("scanType");
+            const scanType = scanTypeSelect.value;
+            const scanTypeText = scanTypeSelect.options[scanTypeSelect.selectedIndex].text;
             const resultDiv = document.getElementById("result");
-    
+        
             if (!ip) {
-                alert("Please enter a valid IP address.");
+                alert("Please enter a valid IP address or domain.");
                 return;
             }
-            resultDiv.innerHTML = "<strong>Scanning...</strong>";
-    
+            
+            resultDiv.innerHTML = `
+                <div style="text-align: center;">
+                    <div class="green-text" style="font-size: 1.2rem; margin-bottom: 10px;">Scanning in progress...</div>
+                    <div>Target: ${ip}</div>
+                    <div>Scan Type: ${scanTypeText}</div>
+                    <div style="margin-top: 20px;">Please wait while we analyze the target...</div>
+                </div>
+            `;
+        
+            // Rest of your fetch code remains the same
             fetch("http://127.0.0.1:5000/scan", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -73,17 +453,35 @@
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
-                    resultDiv.innerHTML = `<span style="color:red;">Error: ${data.error}</span>`;
+                    resultDiv.innerHTML = `
+                        <div style="color: #e74c3c; padding: 10px; border-left: 4px solid #e74c3c; background-color: rgba(231, 76, 60, 0.1);">
+                            <strong>Error:</strong> ${data.error}
+                        </div>
+                    `;
                 } else {
-                    resultDiv.innerHTML = `<strong>Scan Type: ${scanType}</strong><br><pre>${data.output}</pre>`;
+                    resultDiv.innerHTML = `
+                        <div>
+                            <div style="margin-bottom: 15px;">
+                                <strong>Target:</strong> ${ip}<br>
+                                <strong>Scan Type:</strong> ${scanTypeText}<br>
+                                <strong>Time Completed:</strong> ${new Date().toLocaleString()}
+                            </div>
+                            <div style="background-color: var(--card-bg); padding: 15px; border-radius: 4px; overflow-x: auto;">
+                                <pre>${data.output}</pre>
+                            </div>
+                        </div>
+                    `;
                 }
             })
             .catch(error => {
                 console.error("Error:", error);
-                resultDiv.innerHTML = "<span style='color:red;'>An error occurred during scanning.</span>";
+                resultDiv.innerHTML = `
+                    <div style="color: #e74c3c; padding: 10px; border-left: 4px solid #e74c3c; background-color: rgba(231, 76, 60, 0.1);">
+                        <strong>Connection Error:</strong> Could not connect to the scanning service. Please make sure the backend server is running.
+                    </div>
+                `;
             });
         }
-    
         document.addEventListener("DOMContentLoaded", function () {
             const isLoggedIn = localStorage.getItem("loggedIn");
     
