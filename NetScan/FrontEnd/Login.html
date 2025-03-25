@@ -2,195 +2,146 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - NetScanner</title>
-    <link rel="stylesheet" href="login.css"> 
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <title>NetScanner - Login Modal</title>
+    <style>
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;  /* Changed from none to flex */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
-<body class="light-mode">
-    <!-- Header -->
-    <header>
-        <h1 class="logo"><span class="green-text">NetScanner>_</span></h1> 
-        <div class="nav-container">
-            <nav>
-                <a href="NetScanner.html">Home</a>
-                <a href="Scan.html">Scan</a>
-                <a href="#">AI Assistant</a>
-                <a href="#">Login</a>
-                <a href="#">User Guide</a>
-                <a href="About.html">About</a>
-            </nav>
-            <button id="theme-toggle">🌙</button>
-        </div>
-    </header>
+<body>
+    <!-- Demo button to show modal (optional) -->
+    <button id="showLoginModal">Show Login Modal</button>
 
-    <!-- Login Box -->
-    <div class="login-container">
-        <div class="login-box">
-            <h2 class="login-box-header">Login</h2>
-
-            <form id="login-form">
-                <div class="input-container">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login to NetScanner</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
                 </div>
-
-                <div class="input-container">
+                <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <input type="password" id="password" required>
                 </div>
-
-                <button type="submit" class="login-submit">Login</button>
-                <div id="error-message" style="color: red; margin-top: 10px;"></div>
-                <div class="links">
-                    <a href="signup.html" class="create-account">Don't have an account? Create one</a>
-                </div>
+                <button type="submit" class="login-btn">Log In</button>
             </form>
         </div>
     </div>
 
     <script>
-        document.getElementById("theme-toggle").addEventListener("click", function () {
-            const body = document.body;
-            const isDarkMode = body.classList.toggle("dark-mode");
-            localStorage.setItem("theme", isDarkMode ? "dark" : "light");
-            this.textContent = isDarkMode ? "☀️" : "🌙";
-        });
+        // Modal functionality
+        const loginModal = document.getElementById('loginModal');
+        const closeModalBtn = document.querySelector('.close');
+        const showLoginModalBtn = document.getElementById('showLoginModal');
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const savedTheme = localStorage.getItem("theme");
-            if (savedTheme === "dark") {
-                document.body.classList.add("dark-mode");
-                document.getElementById("theme-toggle").textContent = "☀️";
+        // Function to close modal
+        function closeLoginModal() {
+            loginModal.style.display = 'none';
+        }
+
+        // Function to open modal
+        function openLoginModal() {
+            loginModal.style.display = 'flex';
+        }
+
+        // Close modal when clicking the close button
+        closeModalBtn.addEventListener('click', closeLoginModal);
+
+        // Optional: Show modal button
+        showLoginModalBtn.addEventListener('click', openLoginModal);
+
+        // Close modal when clicking outside of it
+        window.addEventListener('click', function(event) {
+            if (event.target === loginModal) {
+                closeLoginModal();
             }
         });
+
+        // Optional: Login form submission handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Here you would typically add login authentication logic
+            console.log('Login attempted with:', username);
+            closeLoginModal();
+        });
     </script>
-
-    <!-- Footer -->
-    <footer>
-        
-        <div class="footer-links">
-            <a href="#">Terms_of_Service.txt</a>
-            <a href="#">Privacy_Policy.txt</a>
-        </div>
-    </footer>
-
-    <style>
-        body.light-mode {
-            background-color: #ffffff;
-            color: #ffffff;
-        }
-        body.dark-mode {
-            background-color: #121212;
-            color: #ffffff;
-        }
-        .login-box, .nav-container nav a, .input-container label, .links a {
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .dark-mode .login-box {
-            background-color: #222;
-            color: #ffffff;
-        }
-        .dark-mode .nav-container nav a, .dark-mode .input-container label, .dark-mode .links a {
-            color: #ffffff;
-        }
-        #theme-toggle {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            margin-left: 10px;
-            color: inherit;
-        }
-    </style>
 </body>
 </html>
-
-
-
-
-
-const chatbotButton = document.getElementById('chatbotButton');
-            const chatbotPanel = document.getElementById('chatbotPanel');
-            const closeChat = document.getElementById('closeChat');
-            const chatInput = document.getElementById('chatInput');
-            const sendMessage = document.getElementById('sendMessage');
-            const chatMessages = document.getElementById('chatMessages');
-
-            // Predefined responses for demo
-            const botResponses = [
-                "I can help you scan your network for vulnerabilities. Would you like to run a quick scan?",
-                "Sure! I can explain how port scanning works. It's a technique used to identify open ports on a network host.",
-                "Your network currently has 12 connected devices. Would you like to see details about each one?",
-                "I notice there are 3 potential vulnerabilities detected in your last scan. Would you like me to analyze them?",
-                "NetScanner uses AI to automatically detect and classify network threats based on traffic patterns.",
-                "You can upgrade to our Pro version for advanced scanning features and real-time monitoring."
-            ];
-
-            // Toggle chatbot panel
-            chatbotButton.addEventListener('click', function() {
-                if (chatbotPanel.style.display === 'flex') {
-                    chatbotPanel.style.display = 'none';
-                } else {
-                    chatbotPanel.style.display = 'flex';
-                    // Remove notification when opened
-                    const notification = document.querySelector('.notification');
-                    if (notification) {
-                        notification.style.display = 'none';
-                    }
-                }
-            });
-
-            // Close chat panel
-            closeChat.addEventListener('click', function() {
-                chatbotPanel.style.display = 'none';
-            });
-
-            // Send message function
-            function sendChatMessage() {
-                const message = chatInput.value.trim();
-                
-                if (message) {
-                    // Add user message
-                    addMessage(message, 'user');
-                    chatInput.value = '';
-                    
-                    // Simulate bot response after a delay
-                    setTimeout(() => {
-                        // Pick a random response
-                        const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
-                        // Add bot message
-                        addMessage(randomResponse, 'bot');
-}, 1000);
-}
-}
-
-// Function to add message to chat
-function addMessage(text, sender) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message');
-    messageDiv.classList.add(sender + '-message');
-    messageDiv.textContent = text;
-    chatMessages.appendChild(messageDiv);
-    
-    // Auto scroll to bottom
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-// Send message on button click
-sendMessage.addEventListener('click', sendChatMessage);
-
-// Send message on Enter key
-chatInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        sendChatMessage();
-    }
-});
-
-// Add initial message after a delay to simulate bot greeting
-setTimeout(() => {
-    const notification = document.querySelector('.notification');
-    if (notification) {
-        notification.style.display = 'block';
-    }
-}, 3000);

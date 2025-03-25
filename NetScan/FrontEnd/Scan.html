@@ -4,22 +4,186 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scan - NetScanner</title>
-    <link rel="stylesheet" href="scan.css">
-</head>
-<body>
+    <style>
+        /* Base styles */
+        :root {
+            --bg-primary: #ffffff;
+            --text-primary: #000000;
+            --bg-secondary: #f4f4f4;
+            --accent-color: #4CAF50;
+            --hover-color: #45a049;
+        }
 
+        body.dark-mode {
+            --bg-primary: #121212;
+            --text-primary: #ffffff;
+            --bg-secondary: #1e1e1e;
+            --accent-color: #4CAF50;
+            --hover-color: #3d8b40;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--bg-secondary);
+        }
+
+        .logo .green-text {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-container nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-container a {
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: color 0.3s;
+        }
+
+        .nav-container a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Theme Toggle */
+        #theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Scan Container */
+        .scan-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .scan-title {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .scan-box, .command-box, .results-box {
+            background-color: var(--bg-primary);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .scan-box label, .command-box p {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .scan-box input, .scan-box select {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .start-scan, .import-button, .login-button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .start-scan:hover, .import-button:hover, .login-button:hover {
+            background-color: var(--hover-color);
+        }
+
+        .command {
+            background-color: var(--bg-secondary);
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            word-wrap: break-word;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .results-content {
+            min-height: 200px;
+            border: 1px dashed #ddd;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        /* Scan Type Descriptions */
+        #scan-type option[value="ping"] {
+            color: #4CAF50;
+        }
+        #scan-type option[value="version"] {
+            color: #2196F3;
+        }
+        #scan-type option[value="aggressive"] {
+            color: #F44336;
+        }
+        #scan-type option[value="intense"] {
+            color: #9C27B0;
+        }
+        #scan-type option[value="super"] {
+            color: #FF9800;
+        }
+    </style>
+</head>
+<body class="light-mode">
     <!-- Header -->
     <header>
-        <h1 class="logo"><span class="green-text">NetScanner>_</span></h1> 
+        <h1 class="logo"><span class="green-text">NetScanner>_</span></h1>
         <div class="nav-container">
             <nav>
                 <a href="NetScanner.html">Home</a>
-                <a href="#">Scan</a>
-                <a href="#">AI Assistant</a>
-                <a href="#">User Guide</a>
+                <a href="Scan.html">Scan</a>
+                <a href="chatbot.html">AI Assistant</a>
+                <a href="UserGuide.html">User Guide</a>
                 <a href="About.html">About</a>
             </nav>
-            <!-- Login button that redirects to the login page -->
+            <!-- Theme Toggle -->
+            <button id="theme-toggle">🌙</button>
+            <!-- Login button -->
             <a href="login.html"><button class="login-button">Login</button></a>
         </div>
     </header>
@@ -31,15 +195,17 @@
         <div class="scan-box">
             <label for="ip-address">Target IP Address</label>
             <input type="text" id="ip-address" placeholder="Enter single IP, range, or multiple IPs separated by commas">
-
+            
             <label for="scan-type">Scan Type</label>
             <select id="scan-type">
                 <option value="" disabled selected>Select a scan type</option>
                 <option value="ping">Ping Scan - Simple ping sweep to discover live hosts</option>
                 <option value="version">Version Detection - Detect service versions on open ports</option>
                 <option value="aggressive">Aggressive Scan - Enable OS detection and version scanning</option>
+                <option value="intense">Intense Scan - Comprehensive network exploration</option>
+                <option value="super">Super Scan - Advanced multi-layered network analysis</option>
             </select>
-
+            
             <button class="start-scan">Start Scan</button>
         </div>
 
@@ -58,27 +224,87 @@
     </div>
 
     <script>
-        // JavaScript to dynamically update the Nmap command
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            // Update theme toggle icon
+            themeToggle.textContent = body.classList.contains('dark-mode') ? '☀️' : '🌙';
+            // Save theme preference
+            localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+
+        // Load saved theme on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeToggle.textContent = '☀️';
+            }
+        });
+
+        // Nmap Command Generation
         const ipInput = document.getElementById('ip-address');
         const scanTypeSelect = document.getElementById('scan-type');
         const nmapCommandText = document.getElementById('nmap-command');
+        const startScanButton = document.querySelector('.start-scan');
 
-        // Function to update the Nmap command based on user input
         function updateNmapCommand() {
             const ipValue = ipInput.value;
+            const scanType = scanTypeSelect.value;
 
             if (ipValue) {
-                // Only show nmap command with the IP address
-                let scanCommand = 'nmap ' + ipValue;
-                nmapCommandText.textContent = scanCommand; // Update the command text
+                let scanCommand = 'nmap ';
+
+                // Add scan type specific flags
+                switch(scanType) {
+                    case 'ping':
+                        scanCommand += '-sn ' + ipValue; // Ping scan
+                        break;
+                    case 'version':
+                        scanCommand += '-sV ' + ipValue; // Version detection
+                        break;
+                    case 'aggressive':
+                        scanCommand += '-A ' + ipValue; // Aggressive scan (OS detection, version, script scanning)
+                        break;
+                    case 'intense':
+                        scanCommand += '-sS -sV -O -p- ' + ipValue; // Comprehensive scan
+                        break;
+                    case 'super':
+                        scanCommand += '-sS -sV -O -p- -A -T4 ' + ipValue; // Super advanced scan
+                        break;
+                    default:
+                        scanCommand += ipValue;
+                }
+
+                nmapCommandText.textContent = scanCommand;
             }
         }
 
-        // Add event listeners to update command when input changes
+        // Event listeners
         ipInput.addEventListener('input', updateNmapCommand);
         scanTypeSelect.addEventListener('change', updateNmapCommand);
-        
-    </script>
 
+        // Start Scan Button (placeholder functionality)
+        startScanButton.addEventListener('click', () => {
+            const resultsContent = document.querySelector('.results-content');
+            
+            // Simulate scan loading
+            resultsContent.innerHTML = '<p>Scanning... Please wait.</p>';
+            
+            // Simulate scan results (replace with actual scan logic)
+            setTimeout(() => {
+                resultsContent.innerHTML = `
+                    <h3>Scan Results for ${ipInput.value}</h3>
+                    <p>Scan Type: ${scanTypeSelect.options[scanTypeSelect.selectedIndex].text}</p>
+                    <p>Status: Completed</p>
+                    <p>Open Ports: 22, 80, 443</p>
+                    <p>Vulnerabilities: None detected</p>
+                `;
+            }, 2000);
+        });
+    </script>
 </body>
 </html>

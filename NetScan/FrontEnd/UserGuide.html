@@ -3,75 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Guide - NetScanner</title>
-    <link rel="stylesheet" href="userguide.css">
-    <script src="userguide_script.js" defer></script>
+    <title>NetScanner>_ | Network Security Scanning Commands</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --light-bg: #f8f9fa;
+            --dark-bg: #343a40;
+            --text-color: #333;
+            --text-color-light: #f4f4f4;
+        }
+    body {
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .nav-container {
+        background-color: var(--primary-color);
+        padding: 1rem 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .nav-container nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+
+    .nav-container nav a {
+        color: white;
+        text-decoration: none;
+        margin: 0 15px;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+    .message-block {
+        margin-bottom: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding: 20px;
+        transition: transform 0.3s ease;
+    }
+
+    .message-block:hover {
+        transform: translateY(-5px);
+    }
+
+    .message-block h2 {
+        color: var(--primary-color);
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 10px;
+    }
+
+    code {
+        background-color: #f4f4f4;
+        color: #333;
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-size: 0.9em;
+    }
+
+    .scan-type {
+        margin-bottom: 15px;
+    }
+
+    .scan-type h3 {
+        color: var(--primary-color);
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .detailed-scans {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    .alert-warning {
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+        color: #856404;
+    }
+</style>
 </head>
 <body>
-
-    <!-- Header -->
     <header>
-        <h1 class="logo"><span class="green-text">NetScanner>_</span></h1> 
         <div class="nav-container">
             <nav>
                 <a href="NetScanner.html">Home</a>
-                <a href="#">Scan</a>
-                <a href="#">AI_Assistant</a>
-                <a href="UserGuide.html">User_Guide</a>
+                <a href="Scan.html">Scan</a>
+                <a href="chatbot.html">AI Assistant</a>
+                <a href="Login.html" id="loginBtn">Login</a>
+                <a href="Userguide.html">User Guide</a>
                 <a href="About.html">About</a>
             </nav>
-            <a href="login.html"><button class="login-button">Login</button></a>
-            <img src="Settings.png" alt="Settings" class="settings-icon">
         </div>
     </header>
-
-    <!-- User Guide (Scan Page as Background) -->
-    <div class="scan-container">
-        <h1 class="scan-title"><span class="green-text">User Guide</span></h1>
-        
-        <div class="scan-box">
-            <label for="ip-address">Step 1: Enter Target IP Address</label>
-            <input type="text" id="ip-address" placeholder="Enter single IP, range, or multiple IPs">
-
-            <label for="scan-type">Step 2: Select a Scan Type</label>
-            <select id="scan-type">
-                <option value="" disabled selected>Select a scan type</option>
-                <option value="ping">Ping Scan - Discover live hosts</option>
-                <option value="version">Version Detection - Detect service versions</option>
-                <option value="aggressive">Aggressive Scan - Enable OS detection</option>
-            </select>
-
-            <label>Step 3: Click 'Start Scan' to Begin</label>
-            <button class="start-scan">Start Scan</button>
-        </div>
-
-        <div class="command-box">
-            <p>Generated Nmap Command:</p>
-            <div class="command" id="nmap-command">nmap [target]</div>
-        </div>
-
-        <div class="results-box">
-            <div class="results-header">
-                <p>Step 4: View Scan Results Below</p>
-                <button class="import-button">Import Results</button>
+    <main class="container my-5">
+    <h1 class="mb-4">Network Security Scanning Commands</h1>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="message-block">
+                <h2>Scanning Methodology Overview</h2>
+                <p>Network scanning is a critical process for identifying vulnerabilities, understanding network topology, and ensuring security. This guide provides comprehensive scanning techniques using NetScanner>_ tool.</p>
+                <div class="alert alert-warning">
+                    <strong>⚠️ Important:</strong> Always obtain proper authorization before scanning networks. Unauthorized scanning can be illegal and unethical.
+                </div>
             </div>
-            <div class="results-content">Results will appear here...</div>
         </div>
     </div>
 
-    <!-- Floating Navigation Guide -->
-    <div class="user-guide-overlay">
-        <h2>🔍 User Guide Navigation</h2>
-        <p id="step-text">Welcome to NetScanner! Click "Next" to begin.</p>
-
-        <div class="button-container">
-            <button id="prev-btn" onclick="prevStep()" disabled>⬅ Back</button>
-            <button id="next-btn" onclick="nextStep()">Next ➡</button>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="message-block">
+                <h2>Nmap Scanning Techniques</h2>
+                <div class="scan-type">
+                    <h3>1. Forward-confirmed Reverse DNS (FCrDNS)</h3>
+                    <p><code>nmap -sn -Pn --script fcrdns [hostname]</code></p>
+                    <p>Performs a Forward-confirmed Reverse DNS lookup to detect DNS configuration anomalies.</p>
+                </div>
+                <div class="scan-type">
+                    <h3>2. Validates forward and reverse DNS mappings</h3>
+                    <p><code>[hostname] can be a domain name or IP address</code></p>
+                    <p>Helps identify potential DNS spoofing or misconfiguration</p>
+                </div>
+                <div class="scan-type">
+                    <h3>3. Vulnerability Specific Scans - Log4Shell Vulnerability Check</h3>
+                    <p><code>nmap --script "http-vuln-log4shell" [hostname]</code></p>
+                    Scans for Log4Shell vulnerability (CVE-2021-44228).</p>
+                </div>
+                <div class="scan-type">
+                    <h3>4. Apache Path Traversal Vulnerability</h3>
+                    <p><code>nmap --script=http-vuln-cve-2021-41773 [hostname]</code></p>
+                    <p>Checks for CVE-2021-41773 Path Traversal in Apache Web Server 2.4.49.</p>
+                </div>
+            </div>
         </div>
-
-        <!-- Cursor Guide -->
-        <div id="animated-cursor"></div>
+        
+        <div class="col-md-6">
+            <div class="message-block">
+                <h2>Nmap Scanning Techniques</h2>
+                <div class="scan-type">
+                    <h3>5. Fast Network Scan</h3>
+                    <p><code>nmap -F [hostname]</code></p>
+                    <p>Quick scan of most popular 100 ports.</p>
+                </div>
+                <div class="scan-type">
+                    <h3>6. Standard Port Scan</h3>
+                    <p><code>nmap [hostname]</code></p>
+                    <p>Basic port scanning on a remote system.</p>
+                </div>
+                <div class="scan-type">
+                    <h3>7. Specific Service Scan</h3>
+                    <p><code>nmap -sV -p 21,22,25,80,110,143,443,445 [hostname]</code></p>
+                    <p>Targeted scan of common service ports with version detection.</p>
+                </div>
+                <div class="scan-type">
+                    <h3>8. Comprehensive Scan</h3>
+                    <p><code>nmap -A [hostname]</code></p>
+                    <p>Detailed system information gathering including OS detection.</p>
+                </div>
+                <div class="scan-type">
+                    <h3>9. Determining Firewall Rules</h3>
+                    <p><code>nmap -sA [hostname]</code></p>
+                    <p>Unfiltered ports return reset, making their status unknown. Filtered ports don’t respond or send ICMP errors.</p>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="message-block detailed-scans">
+                <h2>Advanced Nmap Scanning Techniques</h2>
+                <div class="row">
+                    <div class="col-md-4">
+                        <h3>Reconnaissance Scans</h3>
+                        <ul>
+                            <li><code>nmap -sP [hostname]</code> - Ping Scan</li>
+                            <li><code>nmap -sn -Pn --script fcrdns [hostname]</code> - Reverse DNS Lookup</li>
+                            <li><code>nmap --script http-headers [hostname]</code> - HTTP Headers Scan</li>
+                            <li><code>nmap --script banner [hostname]</code> - Banner Grabbing</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>Vulnerability Scans</h3>
+                        <ul>
+                            <li><code>nmap --script "http-vuln*" [hostname]</code> - HTTP Vulnerabilities</li>
+                            <li><code>nmap --script=http-vuln-cve-2021-41773 [hostname]</code> - Specific CVE Check</li>
+                            <li><code>nmap -sV --script=http-malware-host [hostname]</code> - Malware Detection</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>Advanced Scanning</h3>
+                        <ul>
+                            <li><code>nmap -O [hostname]</code> - OS Detection</li>
+                            <li><code>nmap -sA [hostname]</code> - Firewall Rule Detection</li>
+                            <li><code>nmap --top-ports [x] [hostname]</code> - Top Ports Scan</li>
+                            <li><code>nmap -p- [hostname]</code> - Full Port Scanning</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="message-block">
+                <h2>Protocol-Specific Scanning</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>TCP Scanning</h3>
+                        <p><code>nmap -sT [hostname]</code></p>
+                        <p>Full TCP connect scan for TCP-based services.</p>
+                        <p>Additional TCP scanning options:</p>
+                        <ul>
+                            <li><code>nmap -sS [hostname]</code> - Stealth SYN scan</li>
+                            <li><code>nmap -p- [hostname]</code> - Full TCP port scan</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>UDP Scanning</h3>
+                        <p><code>nmap -sU [hostname]</code></p>
+                        <p>Comprehensive scanning of UDP-based services.</p>
+                        <p>Additional UDP scanning options:</p>
+                        <ul>
+                            <li><code>nmap -sU -p- [hostname]</code> - Full UDP port scan</li>
+                            <li><code>nmap -sU -sV [hostname]</code> - UDP scan with service version detection</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="message-block">
+                <h2>Additional Security Scanning Techniques</h2>
+                <div class="row">
+                    <div class="col-md-4">
+                        <h3>Network Discovery</h3>
+                        <ul>
+                            <li><code>nmap -sn [network/cidr]</code> - Network ping sweep</li>
+                            <li><code>nmap -PR [network/cidr]</code> - ARP discovery on local network</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>Advanced Detection</h3>
+                        <ul>
+                            <li><code>nmap --traceroute [hostname]</code> - Network path tracing</li>
+                            <li><code>nmap -sV --version-intensity 5 [hostname]</code> - Aggressive version detection</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>Evasion Techniques</h3>
+                        <ul>
+                            <li><code>nmap -f [hostname]</code> - Fragmented packets</li>
+                            <li><code>nmap --data-length 25 [hostname]</code> - Custom packet data length</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="container mt-5 text-center">
+    <p>&copy; 2025 NetScanner>_ | Network Security Solutions</p>
+    <p class="text-muted">Scanning responsibly, securing networks</p>
+</footer>
 </body>
 </html>

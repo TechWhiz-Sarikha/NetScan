@@ -345,6 +345,103 @@
                 right: 80px;
             }
         }
+        <style>
+            .chatbot-container {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 350px;
+                background-color: white;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+                overflow: hidden;
+                max-height: 500px;
+                opacity: 0.9;
+            }
+        
+            .dark-mode .chatbot-container {
+                background-color: #1e293b;
+                color: white;
+            }
+        
+            .chatbot-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 15px;
+                background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+                color: white;
+            }
+        
+            .chatbot-toggle-btn {
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.2rem;
+                cursor: pointer;
+            }
+        
+            .chat-messages-wrapper {
+                display: none;
+            }
+        
+            .chatbot-expanded .chat-messages-wrapper {
+                display: block;
+            }
+        
+            .chat-messages {
+                height: 350px;
+                overflow-y: auto;
+                padding: 15px;
+            }
+        
+            .chat-message {
+                margin-bottom: 10px;
+                max-width: 85%;
+            }
+        
+            .user-message .message-content {
+                background-color: var(--primary-color);
+                color: white;
+                align-self: flex-end;
+                margin-left: auto;
+                border-radius: 12px 12px 0 12px;
+            }
+        
+            .ai-message .message-content {
+                background-color: #f1f5f9;
+                color: #0f172a;
+                align-self: flex-start;
+                border-radius: 12px 12px 12px 0;
+            }
+        
+            .dark-mode .ai-message .message-content {
+                background-color: #334155;
+                color: white;
+            }
+        
+            .message-content {
+                padding: 10px 15px;
+                display: inline-block;
+                max-width: 100%;
+                word-wrap: break-word;
+            }
+        
+            .chat-input-area {
+                display: flex;
+                padding: 10px;
+                background-color: #f8fafc;
+            }
+        
+            .dark-mode .chat-input-area {
+                background-color: #1e293b;
+            }
+        
+            .chat-input {
+                flex-grow: 1;
+                margin-right: 10px;
+            }
     </style>
 </head>
 <body>
@@ -370,9 +467,9 @@
             <nav class="main-nav" id="mainNav">
                 <a href="NetScanner.html"><i class="fas fa-home me-1"></i> Home</a>
                 <a href="Scan.html"><i class="fas fa-search me-1"></i> Scan</a>
-                <a href="#" class="active"><i class="fas fa-robot me-1"></i> AI Assistant</a>
+                <a href="chatbot.html" class="active"><i class="fas fa-robot me-1"></i> AI Assistant</a>
                 <a href="login.html"><i class="fas fa-sign-in-alt me-1"></i> Login</a>
-                <a href="#"><i class="fas fa-book me-1"></i> User Guide</a>
+                <a href="UserGuide.html"><i class="fas fa-book me-1"></i> User Guide</a>
                 <a href="About.html"><i class="fas fa-info-circle me-1"></i> About</a>
             </nav>
         </div>
@@ -584,7 +681,7 @@
                 showNotification('Please select a PDF file first! 📄', 4000);
                 return;
             }
-
+        
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
             
@@ -595,8 +692,8 @@
             document.getElementById('uploadSpinner').style.display = 'block';
             document.getElementById('uploadBtn').disabled = true;
             
-            // Post to our Flask backend
-            fetch('/upload', {
+            // Post to Flask backend
+            fetch('http://localhost:5000/upload', {
                 method: 'POST',
                 body: formData
             })
@@ -628,13 +725,7 @@
         }
 
         function askQuestion() {
-            const text = document.getElementById('reportText').value;
-            const question = document.getElementById('question').value;
-            
-            if (!text) {
-                showNotification('Please upload a scan report first! 📄', 4000);
-                return;
-            }
+            const question = document.getElementById('question').value.trim();
             
             if (!question) {
                 showNotification('Please enter a question! 🤔', 4000);
@@ -650,7 +741,10 @@
             fetch('/ask', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text, question })
+                body: JSON.stringify({ 
+                    text: '', // Empty scan report
+                    question: question 
+                })
             })
             .then(response => {
                 if (!response.ok) {
@@ -666,7 +760,7 @@
                 
                 if (data.answer) {
                     document.getElementById('answer').value = data.answer;
-                    showNotification('Answer ready! 🧠');
+                    showNotification('AI Analysis Complete! 🧠');
                     // Clear the question input
                     document.getElementById('question').value = '';
                 } else {
@@ -682,6 +776,8 @@
                 showNotification('Failed to process your question: ' + error.message, 5000);
             });
         }
+        
+        // Modify the backend Python code similarly
         
         // Add some demo data for testing purposes
         document.addEventListener('DOMContentLoaded', function() {
@@ -777,6 +873,158 @@ VULNERABLE SERVICES:
         
         // Call this function to add the export button
         addExportButton();
+
+        // OpenAI API Integration
+const OPENAI_API_KEY = ''; // Replace with actual API key
+const OPENAI_API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
+
+// Enhance existing AI functionality
+async function askQuestion() {
+    const question = document.getElementById('question').value.trim();
+    const scanReport = document.getElementById('reportText').value || '';
+    
+    if (!question) {
+        showNotification('Please enter a question! 🤔', 4000);
+        return;
+    }
+    
+    // Show spinner, disable button
+    document.getElementById('askSpinner').style.display = 'block';
+    document.getElementById('askBtn').disabled = true;
+    document.getElementById('question').disabled = true;
+    
+    try {
+        // Prepare payload for OpenAI API
+        const payload = {
+            model: "gpt-3.5-turbo",
+            messages: [
+                {
+                    role: "system", 
+                    content: `You are a network security AI assistant specialized in analyzing Nmap scan reports. 
+                    Provide clear, concise, and actionable insights about network vulnerabilities, 
+                    security risks, and recommended mitigation strategies.`
+                },
+                {
+                    role: "user", 
+                    content: `Scan Report:\n${scanReport}\n\nQuestion: ${question}`
+                }
+            ],
+            max_tokens: 300,
+            temperature: 0.7
+        };
+
+        // Send request to OpenAI API
+        const response = await fetch(OPENAI_API_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${OPENAI_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error('API request failed');
+        }
+
+        const data = await response.json();
+        const answer = data.choices[0].message.content.trim();
+
+        // Hide spinner, enable button
+        document.getElementById('askSpinner').style.display = 'none';
+        document.getElementById('askBtn').disabled = false;
+        document.getElementById('question').disabled = false;
+        
+        // Display answer
+        document.getElementById('answer').value = answer;
+        showNotification('AI Analysis Complete! 🧠');
+        
+        // Clear the question input
+        document.getElementById('question').value = '';
+    } catch (error) {
+        console.error('Error:', error);
+        // Hide spinner, enable button
+        document.getElementById('askSpinner').style.display = 'none';
+        document.getElementById('askBtn').disabled = false;
+        document.getElementById('question').disabled = false;
+        
+        // Show error notification
+        showNotification(`Failed to process your question: ${error.message}`, 5000);
+    }
+}
+
+// Modify existing event listeners to use the new function
+document.addEventListener('DOMContentLoaded', () => {
+    // Replace the existing askQuestion event listener
+    document.getElementById('askBtn').addEventListener('click', askQuestion);
+    
+    // Add Enter key support for the question input
+    document.getElementById('question').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            askQuestion();
+        }
+    });
+
+    // Sample questions rotation remains the same
+    const sampleQuestions = [
+        "What critical vulnerabilities were found?",
+        "Summarize all open ports and services",
+        "What security measures should I implement?",
+        "Which hosts are most vulnerable?",
+        "Are there any unusual open ports?"
+    ];
+    
+    const questionInput = document.getElementById('question');
+    let currentQuestion = 0;
+    
+    setInterval(() => {
+        questionInput.setAttribute('placeholder', sampleQuestions[currentQuestion]);
+        currentQuestion = (currentQuestion + 1) % sampleQuestions.length;
+    }, 3000);
+});
+
+// Enhance existing export functionality to include AI insights
+function exportResults() {
+    const scanText = document.getElementById('reportText').value;
+    const aiAnswer = document.getElementById('answer').value;
+    
+    if (!scanText && !aiAnswer) {
+        showNotification('Nothing to export! Please analyze a scan first.', 4000);
+        return;
+    }
+    
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `netscanner-report-${timestamp}.txt`;
+    
+    let content = "===== NETSCANNER SECURITY REPORT =====\n\n";
+    content += "--- SCAN DETAILS ---\n\n";
+    content += scanText + "\n\n";
+    
+    if (aiAnswer) {
+        content += "--- AI ASSISTANT ANALYSIS ---\n\n";
+        content += aiAnswer + "\n\n";
+    }
+    
+    content += "Generated by NetScanner>_ | " + new Date().toLocaleString();
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    
+    // Cleanup
+    setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }, 0);
+    
+    showNotification('Report exported successfully! 📄', 3000);
+}
+        
     </script>
 </body>
 </html>
