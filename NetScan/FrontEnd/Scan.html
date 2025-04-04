@@ -115,7 +115,7 @@
             border-radius: 4px;
         }
 
-        .start-scan, .import-button, .login-button {
+        .start-scan, .import-button, .login-button, .export-button {
             background-color: var(--accent-color);
             color: white;
             border: none;
@@ -125,7 +125,7 @@
             transition: background-color 0.3s;
         }
 
-        .start-scan:hover, .import-button:hover, .login-button:hover {
+        .start-scan:hover, .import-button:hover, .login-button:hover, .export-button:hover {
             background-color: var(--hover-color);
         }
 
@@ -142,6 +142,11 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
         }
 
         .results-content {
@@ -166,6 +171,72 @@
         }
         #scan-type option[value="super"] {
             color: #FF9800;
+        }
+
+        /* Advanced Options Styles */
+        .advanced-options {
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px dashed #ddd;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .advanced-options.show {
+            display: block;
+        }
+
+        .option-checkbox {
+            margin-right: 0.5rem;
+        }
+
+        .toggle-advanced {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            text-decoration: underline;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+
+        /* Vulnerabilities section */
+        .vulnerability-item {
+            background-color: rgba(255, 152, 0, 0.1);
+            border-left: 3px solid #FF9800;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .high-risk {
+            background-color: rgba(244, 67, 54, 0.1);
+            border-left: 3px solid #F44336;
+        }
+
+        .medium-risk {
+            background-color: rgba(255, 152, 0, 0.1);
+            border-left: 3px solid #FF9800;
+        }
+
+        .low-risk {
+            background-color: rgba(76, 175, 80, 0.1);
+            border-left: 3px solid #4CAF50;
+        }
+
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .details-table th, .details-table td {
+            padding: 0.5rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .details-table th {
+            background-color: var(--bg-secondary);
         }
     </style>
 </head>
@@ -203,8 +274,20 @@
                 <option value="version">Version Detection - Detect service versions on open ports</option>
                 <option value="aggressive">Aggressive Scan - Enable OS detection and version scanning</option>
                 <option value="intense">Intense Scan - Comprehensive network exploration</option>
-                <option value="super">Super Scan - Advanced multi-layered network analysis</option>
+                <option value="super">Super Scan - Advanced multi-layered network analysis with vulnerability detection</option>
             </select>
+            
+            <button class="toggle-advanced">Show Advanced Options</button>
+            
+            <div class="advanced-options">
+                <label><input type="checkbox" class="option-checkbox" id="os-detection"> OS Detection</label><br>
+                <label><input type="checkbox" class="option-checkbox" id="version-detection"> Version Detection</label><br>
+                <label><input type="checkbox" class="option-checkbox" id="vuln-scan"> Vulnerability Scanning</label><br>
+                <label><input type="checkbox" class="option-checkbox" id="script-scan"> Script Scanning</label><br>
+                <label><input type="checkbox" class="option-checkbox" id="fingerprinting"> Service Fingerprinting</label><br>
+                <label><input type="checkbox" class="option-checkbox" id="timing"> Aggressive Timing (T4)</label><br>
+                <label>Port Range: <input type="text" id="port-range" placeholder="e.g., 1-1000 or 'all' for 1-65535"></label>
+            </div>
             
             <button class="start-scan">Start Scan</button>
         </div>
@@ -217,7 +300,10 @@
         <div class="results-box">
             <div class="results-header">
                 <p>Scan Results</p>
-                <button class="import-button">Import Results</button>
+                <div class="button-group">
+                    <button class="import-button">Import Results</button>
+                    <button class="export-button">Export as JSON</button>
+                </div>
             </div>
             <div class="results-content">Results will appear here...</div>
         </div>
@@ -245,11 +331,32 @@
             }
         });
 
-        // Nmap Command Generation
+        // Toggle Advanced Options
+        const toggleAdvanced = document.querySelector('.toggle-advanced');
+        const advancedOptions = document.querySelector('.advanced-options');
+        
+        toggleAdvanced.addEventListener('click', () => {
+            advancedOptions.classList.toggle('show');
+            toggleAdvanced.textContent = advancedOptions.classList.contains('show') 
+                ? 'Hide Advanced Options' 
+                : 'Show Advanced Options';
+        });
+
+        // Get option elements
         const ipInput = document.getElementById('ip-address');
         const scanTypeSelect = document.getElementById('scan-type');
         const nmapCommandText = document.getElementById('nmap-command');
         const startScanButton = document.querySelector('.start-scan');
+        const osDetection = document.getElementById('os-detection');
+        const versionDetection = document.getElementById('version-detection');
+        const vulnScan = document.getElementById('vuln-scan');
+        const scriptScan = document.getElementById('script-scan');
+        const fingerprinting = document.getElementById('fingerprinting');
+        const timing = document.getElementById('timing');
+        const portRange = document.getElementById('port-range');
+        
+        // Global variable to store scan results
+        let currentScanResults = null;
 
         function updateNmapCommand() {
             const ipValue = ipInput.value;
@@ -257,54 +364,368 @@
 
             if (ipValue) {
                 let scanCommand = 'nmap ';
+                let options = [];
 
-                // Add scan type specific flags
-                switch(scanType) {
-                    case 'ping':
-                        scanCommand += '-sn ' + ipValue; // Ping scan
-                        break;
-                    case 'version':
-                        scanCommand += '-sV ' + ipValue; // Version detection
-                        break;
-                    case 'aggressive':
-                        scanCommand += '-A ' + ipValue; // Aggressive scan (OS detection, version, script scanning)
-                        break;
-                    case 'intense':
-                        scanCommand += '-sS -sV -O -p- ' + ipValue; // Comprehensive scan
-                        break;
-                    case 'super':
-                        scanCommand += '-sS -sV -O -p- -A -T4 ' + ipValue; // Super advanced scan
-                        break;
-                    default:
-                        scanCommand += ipValue;
+                // Handle port range
+                if (portRange.value) {
+                    if (portRange.value.toLowerCase() === 'all') {
+                        options.push('-p-');
+                    } else {
+                        options.push(`-p ${portRange.value}`);
+                    }
+                }
+
+                // Add options based on checkboxes
+                if (osDetection.checked) options.push('-O');
+                if (versionDetection.checked) options.push('-sV');
+                if (vulnScan.checked) options.push('--script=vuln');
+                if (scriptScan.checked) options.push('-sC');
+                if (fingerprinting.checked) options.push('-A');
+                if (timing.checked) options.push('-T4');
+
+                // Add scan type specific flags if no custom options
+                if (options.length === 0) {
+                    switch(scanType) {
+                        case 'ping':
+                            scanCommand += '-sn ' + ipValue; // Ping scan
+                            break;
+                        case 'version':
+                            scanCommand += '-sV ' + ipValue; // Version detection
+                            break;
+                        case 'aggressive':
+                            scanCommand += '-A ' + ipValue; // Aggressive scan (OS detection, version, script scanning)
+                            break;
+                        case 'intense':
+                            scanCommand += '-sS -sV -O -p- ' + ipValue; // Comprehensive scan
+                            break;
+                        case 'super':
+                            scanCommand += '-sS -sV -O -p- -A -T4 --script=vuln ' + ipValue; // Super advanced scan
+                            break;
+                        default:
+                            scanCommand += ipValue;
+                    }
+                } else {
+                    // Build command with custom options
+                    scanCommand += options.join(' ') + ' ' + ipValue;
                 }
 
                 nmapCommandText.textContent = scanCommand;
             }
         }
 
-        // Event listeners
-        ipInput.addEventListener('input', updateNmapCommand);
-        scanTypeSelect.addEventListener('change', updateNmapCommand);
+        // Update command when scan type changes
+        scanTypeSelect.addEventListener('change', function() {
+            // Pre-fill advanced options based on scan type
+            const scanType = scanTypeSelect.value;
+            
+            // Reset checkboxes
+            osDetection.checked = false;
+            versionDetection.checked = false;
+            vulnScan.checked = false;
+            scriptScan.checked = false;
+            fingerprinting.checked = false;
+            timing.checked = false;
+            portRange.value = '';
+            
+            // Set checkboxes based on scan type
+            switch(scanType) {
+                case 'ping':
+                    // No options for ping scan
+                    break;
+                case 'version':
+                    versionDetection.checked = true;
+                    break;
+                case 'aggressive':
+                    osDetection.checked = true;
+                    versionDetection.checked = true;
+                    scriptScan.checked = true;
+                    break;
+                case 'intense':
+                    osDetection.checked = true;
+                    versionDetection.checked = true;
+                    portRange.value = 'all';
+                    break;
+                case 'super':
+                    osDetection.checked = true;
+                    versionDetection.checked = true;
+                    vulnScan.checked = true;
+                    scriptScan.checked = true;
+                    fingerprinting.checked = true;
+                    timing.checked = true;
+                    portRange.value = 'all';
+                    break;
+            }
+            
+            updateNmapCommand();
+        });
 
-        // Start Scan Button (placeholder functionality)
+        // Event listeners for command updates
+        ipInput.addEventListener('input', updateNmapCommand);
+        osDetection.addEventListener('change', updateNmapCommand);
+        versionDetection.addEventListener('change', updateNmapCommand);
+        vulnScan.addEventListener('change', updateNmapCommand);
+        scriptScan.addEventListener('change', updateNmapCommand);
+        fingerprinting.addEventListener('change', updateNmapCommand);
+        timing.addEventListener('change', updateNmapCommand);
+        portRange.addEventListener('input', updateNmapCommand);
+
+        // Generate mock scan results based on scan type and options
+        function generateMockResults() {
+            const ipValue = ipInput.value || '192.168.1.1'; // Default if empty
+            const scanType = scanTypeSelect.value;
+            
+            // Base results structure
+            const results = {
+                target: ipValue,
+                scanType: scanTypeSelect.options[scanTypeSelect.selectedIndex].text,
+                timestamp: new Date().toISOString(),
+                command: nmapCommandText.textContent,
+                status: "Completed",
+                hostStatus: "Up",
+                ports: [],
+                os: null,
+                vulnerabilities: []
+            };
+            
+            // Generate open ports based on scan type
+            const commonPorts = [
+                { port: 22, service: "SSH", version: "OpenSSH 8.2p1", state: "open" },
+                { port: 80, service: "HTTP", version: "Apache httpd 2.4.41", state: "open" },
+                { port: 443, service: "HTTPS", version: "nginx 1.18.0", state: "open" }
+            ];
+            
+            // Add ports based on scan type
+            results.ports = [...commonPorts];
+            
+            if (scanType === 'intense' || scanType === 'super' || portRange.value === 'all') {
+                // Add more ports for intense/super scans
+                results.ports.push(
+                    { port: 21, service: "FTP", version: "vsftpd 3.0.3", state: "open" },
+                    { port: 25, service: "SMTP", version: "Postfix", state: "filtered" },
+                    { port: 3306, service: "MySQL", version: "MySQL 5.7.33", state: "open" },
+                    { port: 8080, service: "HTTP-Proxy", version: "Apache Tomcat 9.0.45", state: "open" }
+                );
+            }
+            
+            // Add OS detection if selected
+            if (osDetection.checked || scanType === 'aggressive' || scanType === 'intense' || scanType === 'super') {
+                results.os = {
+                    name: "Linux 5.4",
+                    accuracy: "95%",
+                    type: "Server",
+                    details: "Linux 5.4.0-1024-aws"
+                };
+            }
+            
+            // Add vulnerabilities if applicable
+            if (vulnScan.checked || scanType === 'super') {
+                results.vulnerabilities = [
+                    {
+                        id: "CVE-2022-36763",
+                        name: "Apache HTTP Server vulnerable to DoS",
+                        severity: "Medium",
+                        port: 80,
+                        service: "HTTP",
+                        description: "The HTTP server on port 80 is vulnerable to a denial of service attack.",
+                        remediation: "Update Apache HTTP Server to the latest version."
+                    },
+                    {
+                        id: "CVE-2023-25136",
+                        name: "OpenSSH Authentication Bypass",
+                        severity: "High",
+                        port: 22,
+                        service: "SSH",
+                        description: "The SSH server may allow authentication bypass under specific conditions.",
+                        remediation: "Update OpenSSH to the latest stable version."
+                    },
+                    {
+                        id: "CVE-2021-44790",
+                        name: "Apache mod_lua Buffer Overflow",
+                        severity: "Low",
+                        port: 80,
+                        service: "HTTP",
+                        description: "A buffer overflow in mod_lua could allow an attacker to execute arbitrary code.",
+                        remediation: "Apply the latest security patches for Apache HTTP Server."
+                    }
+                ];
+            }
+            
+            return results;
+        }
+
+        // Function to format and display scan results
+        function displayScanResults(results) {
+            const resultsContent = document.querySelector('.results-content');
+            
+            // Save results for export
+            currentScanResults = results;
+            
+            // Build HTML for results
+            let resultsHTML = `
+                <h3>Scan Results for ${results.target}</h3>
+                <p>Scan Type: ${results.scanType}</p>
+                <p>Status: ${results.status}</p>
+                <p>Host Status: ${results.hostStatus}</p>
+            `;
+            
+            // Add ports section
+            if (results.ports.length > 0) {
+                resultsHTML += `
+                    <h4>Open Ports:</h4>
+                    <table class="details-table">
+                        <tr>
+                            <th>Port</th>
+                            <th>Service</th>
+                            <th>Version</th>
+                            <th>State</th>
+                        </tr>
+                `;
+                
+                results.ports.forEach(port => {
+                    resultsHTML += `
+                        <tr>
+                            <td>${port.port}</td>
+                            <td>${port.service}</td>
+                            <td>${port.version || 'Unknown'}</td>
+                            <td>${port.state}</td>
+                        </tr>
+                    `;
+                });
+                
+                resultsHTML += `</table>`;
+            }
+            
+            // Add OS information if available
+            if (results.os) {
+                resultsHTML += `
+                    <h4>Operating System Detection:</h4>
+                    <p>OS: ${results.os.name} (${results.os.accuracy} accuracy)</p>
+                    <p>Type: ${results.os.type}</p>
+                    <p>Details: ${results.os.details}</p>
+                `;
+            }
+            
+            // Add vulnerabilities if available
+            if (results.vulnerabilities && results.vulnerabilities.length > 0) {
+                resultsHTML += `<h4>Vulnerabilities Found:</h4>`;
+                
+                results.vulnerabilities.forEach(vuln => {
+                    const riskClass = vuln.severity.toLowerCase() === 'high' ? 'high-risk' : 
+                                      vuln.severity.toLowerCase() === 'medium' ? 'medium-risk' : 'low-risk';
+                    
+                    resultsHTML += `
+                        <div class="vulnerability-item ${riskClass}">
+                            <strong>${vuln.id}: ${vuln.name}</strong> (${vuln.severity} Risk)
+                            <p>Affected: ${vuln.service} on port ${vuln.port}</p>
+                            <p>${vuln.description}</p>
+                            <p><strong>Remediation:</strong> ${vuln.remediation}</p>
+                        </div>
+                    `;
+                });
+            }
+            
+            resultsContent.innerHTML = resultsHTML;
+        }
+
+        // Start Scan Button
         startScanButton.addEventListener('click', () => {
             const resultsContent = document.querySelector('.results-content');
+            
+            // Validate IP address
+            if (!ipInput.value) {
+                alert("Please enter a target IP address");
+                return;
+            }
+            
+            // Validate scan type
+            if (!scanTypeSelect.value) {
+                alert("Please select a scan type");
+                return;
+            }
             
             // Simulate scan loading
             resultsContent.innerHTML = '<p>Scanning... Please wait.</p>';
             
-            // Simulate scan results (replace with actual scan logic)
+            // Simulate scan duration based on scan complexity
+            let scanDuration = 1000; // Base duration
+            
+            if (scanTypeSelect.value === 'intense' || portRange.value === 'all') {
+                scanDuration = 3000;
+            } else if (scanTypeSelect.value === 'super') {
+                scanDuration = 4000;
+            }
+            
+            // Simulate scan results
             setTimeout(() => {
-                resultsContent.innerHTML = `
-                    <h3>Scan Results for ${ipInput.value}</h3>
-                    <p>Scan Type: ${scanTypeSelect.options[scanTypeSelect.selectedIndex].text}</p>
-                    <p>Status: Completed</p>
-                    <p>Open Ports: 22, 80, 443</p>
-                    <p>Vulnerabilities: None detected</p>
-                `;
-            }, 2000);
+                const results = generateMockResults();
+                displayScanResults(results);
+            }, scanDuration);
         });
+
+        // Export results as JSON
+        const exportButton = document.querySelector('.export-button');
+        
+        exportButton.addEventListener('click', () => {
+            if (!currentScanResults) {
+                alert("No scan results to export. Please run a scan first.");
+                return;
+            }
+            
+            // Convert results to JSON string
+            const jsonString = JSON.stringify(currentScanResults, null, 2);
+            
+            // Create a Blob
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            
+            // Create download link
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `netscanner_results_${new Date().toISOString().replace(/:/g, '-')}.json`;
+            
+            // Trigger download
+            document.body.appendChild(a);
+            a.click();
+            
+            // Cleanup
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 0);
+        });
+
+        // Import functionality (placeholder)
+        const importButton = document.querySelector('.import-button');
+        
+        importButton.addEventListener('click', () => {
+            // Create a file input element
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.json';
+            
+            fileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importedResults = JSON.parse(e.target.result);
+                        currentScanResults = importedResults;
+                        displayScanResults(importedResults);
+                    } catch (error) {
+                        alert("Error importing results: Invalid JSON file");
+                        console.error(error);
+                    }
+                };
+                reader.readAsText(file);
+            });
+            
+            fileInput.click();
+        });
+
+        // Initialize command on page load
+        document.addEventListener('DOMContentLoaded', updateNmapCommand);
     </script>
 </body>
 </html>
