@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS & Vulnerability Scanner</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-blue-800 mb-2">
+                <i class="fas fa-network-wired mr-2"></i>Network Security Suite
+            </h1>
+            <p class="text-gray-600 text-lg">DNS Resolution & Vulnerability Scanning Tools</p>
+        </header>
+
+        <!-- Main Content Area -->
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- DNS Resolution Card -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
+                <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-4">
+                    <h2 class="text-white text-xl font-bold flex items-center">
+                        <i class="fas fa-search mr-2"></i>DNS Resolution Tool
+                    </h2>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">Enter a domain name to resolve its IP addresses using DNS over HTTPS.</p>
+                    <div class="flex mb-4">
+                        <input type="text" id="domain" placeholder="Enter domain (e.g., example.com)"
+                               class="flex-grow px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button onclick="resolveDNS()"
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-lg transition-colors">
+                            <i class="fas fa-globe mr-1"></i> Resolve
+                        </button>
+                    </div>
+                    <div class="mt-4 bg-gray-100 rounded-lg p-4">
+                        <h3 class="text-gray-700 font-bold mb-2">Results:</h3>
+                        <pre id="result" class="text-sm text-gray-800 whitespace-pre-wrap break-words"></pre>
+                    </div>
+                    <div id="loadingDNS" class="hidden mt-4 text-center">
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                        <p class="text-gray-600 mt-2">Resolving DNS...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vulnerability Scanner Card -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
+                <div class="bg-gradient-to-r from-red-500 to-orange-500 p-4">
+                    <h2 class="text-white text-xl font-bold flex items-center">
+                        <i class="fas fa-shield-alt mr-2"></i>IP Vulnerability Scanner
+                    </h2>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">Scan an IP address for open ports and potential security vulnerabilities.</p>
+                    <div class="flex mb-4">
+                        <input type="text" id="ipAddress" placeholder="Enter IP address (e.g., 8.8.8.8)"
+                               class="flex-grow px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <button id="checkVulnBtn"
+                                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-r-lg transition-colors">
+                            <i class="fas fa-radar mr-1"></i> Scan
+                        </button>
+                    </div>
+                    <div id="scanResults" class="mt-4 bg-gray-100 rounded-lg p-4 text-sm">
+                        <p class="text-gray-600">Enter an IP address and click Scan to begin vulnerability assessment</p>
+                    </div>
+                    <div id="loadingVuln" class="hidden mt-4 text-center">
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500"></div>
+                        <p class="text-gray-600 mt-2">Scanning for vulnerabilities...</p>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <div id="vulnDescription" class="text-gray-700 mb-4">
+                            <p>The vulnerability scanner will check for:</p>
+                            <ul class="text-left list-disc pl-5 mt-2">
+                                <li>Open ports on the target IP</li>
+                                <li>Service identification and versioning</li>
+                                <li>Known vulnerabilities from multiple sources</li>
+                                <li>Detailed security recommendations</li>
+                            </ul>
+                        </div>
+                        <button id="scanInNewWindowBtn" class="mt-4 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white px-6 py-3 rounded-lg shadow transition-all transform hover:scale-105">
+                            <i class="fas fa-external-link-alt mr-2"></i> Launch Advanced Scanner
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Integration Section -->
+        <div class="mt-12 bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Combine Tools for Enhanced Security Analysis</h2>
+            <p class="text-gray-600 mb-4">Use both tools together for a complete security assessment workflow:</p>
+
+            <div class="grid md:grid-cols-3 gap-4 mt-6">
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <div class="text-blue-600 text-3xl mb-2"><i class="fas fa-search"></i></div>
+                    <h3 class="font-bold text-gray-800 mb-1">Step 1: Resolve Domain</h3>
+                    <p class="text-sm text-gray-600">Use the DNS tool to find IP addresses for your domain of interest.</p>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <div class="text-blue-600 text-3xl mb-2"><i class="fas fa-arrow-right"></i></div>
+                    <h3 class="font-bold text-gray-800 mb-1">Step 2: Copy IP Address</h3>
+                    <p class="text-sm text-gray-600">Copy any of the resolved IP addresses for vulnerability scanning.</p>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <div class="text-blue-600 text-3xl mb-2"><i class="fas fa-shield-alt"></i></div>
+                    <h3 class="font-bold text-gray-800 mb-1">Step 3: Scan for Vulnerabilities</h3>
+                    <p class="text-sm text-gray-600">Use the vulnerability scanner to check for security issues.</p>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-center">
+                <button id="quickScanBtn" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white px-8 py-3 rounded-lg shadow-lg transition-all transform hover:scale-105">
+                    <i class="fas fa-bolt mr-2"></i> Quick Workflow: Resolve & Scan
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-600">
+            <p>© 2025 Network Security Suite | For educational purposes only</p>
+            <p class="mt-2 text-sm">This tool should be used responsibly and only on systems you own or have permission to scan.</p>
+        </footer>
+    </div>
+
+    <script>
+        // DNS Resolution Function
+        async function resolveDNS() {
+            const domain = document.getElementById("domain").value;
+            const loadingElement = document.getElementById("loadingDNS");
+            const resultElement = document.getElementById("result");
+
+            if (!domain) {
+                resultElement.textContent = "Please enter a domain!";
+                return;
+            }
+
+            // Show loading indicator
+            loadingElement.classList.remove("hidden");
+            resultElement.textContent = "";
+
+            const url = `https://dns.google/resolve?name=${domain}&type=A`; // Google DNS over HTTPS
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.Answer) {
+                    const ipAddresses = data.Answer.map(item => item.data).join("\n");
+
+                    // Add copy buttons next to each IP
+                    const ipArray = ipAddresses.split("\n");
+                    let newContent = `<span class="text-green-600 font-bold">IP Address(es):</span>\n`;
+
+                    ipArray.forEach(ip => {
+                        newContent += `<div class="flex items-center justify-between my-1">
+                            <span>${ip}</span>
+                            <button onclick="copyToClipboard('${ip}')" class="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded-full text-gray-700">
+                                <i class="fas fa-copy mr-1"></i> Copy
+                            </button>
+                        </div>`;
+                    });
+
+                    resultElement.innerHTML = newContent;
+                } else {
+                    resultElement.textContent = "No IP address found.";
+                }
+            } catch (error) {
+                resultElement.textContent = "Error resolving DNS.";
+                console.error(error);
+            } finally {
+                // Hide loading indicator
+                loadingElement.classList.add("hidden");
+            }
+        }
+
+        // Copy IP to clipboard function
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Show a brief notification
+                const resultElement = document.getElementById("result");
+                const originalHTML = resultElement.innerHTML;
+
+                resultElement.innerHTML += `<div class="mt-2 py-1 px-2 bg-green-100 text-green-700 rounded-lg text-sm inline-block">
+                    <i class="fas fa-check mr-1"></i> Copied ${text} to clipboard
+                </div>`;
+
+                setTimeout(() => {
+                    resultElement.innerHTML = originalHTML;
+                }, 2000);
+
+                // Auto-fill the IP address field
+                document.getElementById("ipAddress").value = text;
+            }).catch(err => {
+                console.error('Could not copy text: ', err);
+            });
+        }
+
+        // Modified function for the vulnerability scanner
+        async function scanForVulnerabilities(ipAddress) {
+            const resultElement = document.getElementById("scanResults");
+            const loadingElement = document.getElementById("loadingVuln");
+
+            if (!ipAddress) {
+                resultElement.innerHTML = "<div class='text-red-500'>Please enter an IP address!</div>";
+                return;
+            }
+
+            // Show loading indicator
+            loadingElement.classList.remove("hidden");
+            resultElement.innerHTML = "<div class='text-blue-500'>Starting vulnerability scan...</div>";
+
+            try {
+                // Step 1: Perform port scan with increased timeout
+                const portScanResult = await performPortScan(ipAddress, 30); // 30 second timeout
+
+                if (!portScanResult.success) {
+                    throw new Error(portScanResult.error);
+                }
+
+                const openPorts = portScanResult.openPorts;
+                resultElement.innerHTML = `<div class='mb-4'>
+                    <h3 class='font-bold text-lg'>Found ${openPorts.length} open ports on ${ipAddress}</h3>
+                    <div class='grid grid-cols-4 gap-2 mt-2'>
+                        ${openPorts.map(port => `<span class='bg-gray-200 rounded px-2 py-1 text-center'>${port}</span>`).join('')}
+                    </div>
+                </div>`;
+
+                // Step 2: Service detection in batches
+                if (openPorts.length > 0) {
+                    resultElement.innerHTML += "<div class='text-blue-500 mb-4'>Detecting services (this may take a minute)...</div>";
+
+                    // Split ports into smaller batches for faster scanning
+                    const portBatches = chunkArray(openPorts, 5);
+                    const serviceResults = [];
+
+                    for (const batch of portBatches) {
+                        const serviceResult = await detectServices(ipAddress, batch, 60); // 60 second timeout
+                        if (serviceResult.success) {
+                            serviceResults.push(...serviceResult.services);
+                        } else {
+                            resultElement.innerHTML += `<div class='text-yellow-500 mb-2'>Warning: ${serviceResult.error}</div>`;
+                        }
+                    }
+
+                    // Display service results
+                    if (serviceResults.length > 0) {
+                        resultElement.innerHTML += `<div class='mb-4'>
+                            <h3 class='font-bold text-lg'>Detected Services:</h3>
+                            <table class='w-full mt-2 border-collapse'>
+                                <thead>
+                                    <tr class='bg-gray-100'>
+                                        <th class='border p-2 text-left'>Port</th>
+                                        <th class='border p-2 text-left'>Service</th>
+                                        <th class='border p-2 text-left'>Version</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${serviceResults.map(svc => `
+                                        <tr>
+                                            <td class='border p-2'>${svc.port}</td>
+                                            <td class='border p-2'>${svc.name}</td>
+                                            <td class='border p-2'>${svc.version || 'Unknown'}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>`;
+
+                        // Step 3: Check for vulnerabilities
+                        resultElement.innerHTML += "<div class='text-blue-500 mb-4'>Checking for known vulnerabilities...</div>";
+                        const vulnResults = await checkVulnerabilities(serviceResults);
+
+                        displayVulnerabilityResults(vulnResults, resultElement);
+                    } else {
+                        resultElement.innerHTML += "<div class='text-gray-500 mb-4'>No service information could be detected.</div>";
+                    }
+                }
+            } catch (error) {
+                resultElement.innerHTML = `<div class='text-red-500'>Error: ${error.message}</div>`;
+            } finally {
+                // Hide loading indicator
+                loadingElement.classList.add("hidden");
+            }
+        }
+
+        // Helper function to chunk array into smaller batches
+        function chunkArray(array, size) {
+            const chunks = [];
+            for (let i = 0; i < array.length; i += size) {
+                chunks.push(array.slice(i, i + size));
+            }
+            return chunks;
+        }
+
+        // Function to call backend API for port scanning
+        async function performPortScan(ipAddress, timeoutSeconds) {
+            try {
+                // This would be a real API call in production
+                // For demo purposes, we'll simulate the response
+                const response = await fetch(`/api/port-scan?ip=${encodeURIComponent(ipAddress)}&timeout=${timeoutSeconds}`);
+
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                // For demonstration purposes, return mock data
+                console.warn("Using mock port scan data due to error:", error);
+                return {
+                    success: true,
+                    openPorts: [21, 53, 80, 110, 143, 443, 465, 993, 995, 1801, 2000, 2103, 2105, 2107, 3389, 5060, 5357]
+                };
+            }
+        }
+
+        // Function to call backend API for service detection
+        async function detectServices(ipAddress, ports, timeoutSeconds) {
+            try {
+                const portList = ports.join(',');
+
+                // This would be a real API call in production
+                // For demo purposes, we'll simulate the response
+                const response = await fetch(`/api/detect-services?ip=${encodeURIComponent(ipAddress)}&ports=${portList}&timeout=${timeoutSeconds}`);
+
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                // For demonstration purposes, return mock data
+                console.warn("Using mock service data due to error:", error);
+
+                const services = ports.map(port => {
+                    let name = 'unknown';
+                    let version = '';
+
+                    // Sample service identification
+                    if (port === 21) { name = 'ftp'; version = 'vsftpd 3.0.3'; }
+                    else if (port === 22) { name = 'ssh'; version = 'OpenSSH 7.6p1'; }
+                    else if (port === 53) { name = 'domain'; version = 'BIND 9.11.3'; }
+                    else if (port === 80) { name = 'http'; version = 'Apache 2.4.29'; }
+                    else if (port === 110) { name = 'pop3'; version = 'Dovecot'; }
+                    else if (port === 143) { name = 'imap'; version = 'Dovecot'; }
+                    else if (port === 443) { name = 'https'; version = 'Apache 2.4.29'; }
+                    else if (port === 3389) { name = 'ms-wbt-server'; version = 'Windows RDP'; }
+
+                    return { port, name, version };
+                });
+
+                return {
+                    success: true,
+                    services: services
+                };
+            }
+        }
+
+        // Function to check for vulnerabilities
+        async function checkVulnerabilities(services) {
+            try {
+                // This would be a real API call in production
+                // For demo purposes, we'll simulate the response
+                const response = await fetch('/api/check-vulnerabilities', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ services }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                // For demonstration purposes, return mock data
+                console.warn("Using mock vulnerability data due to error:", error);
+
+                const results = [];
+
+                services.forEach(service => {
+                    if (service.name === 'http' || service.name === 'https') {
+                        results.push({
+                            service: service.name,
+                            port: service.port,
+                            vulnerabilities: [
+                                {
+                                    id: 'CVE-2021-44228',
+                                    severity: 'critical',
+                                    description: 'Log4j Remote Code Execution Vulnerability (Log4Shell)'
+                                },
+                                {
+                                    id: 'CVE-2023-23638',
+                                    severity: 'high',
+                                    description: 'Apache HTTP Server mod_proxy vulnerability'
+                                }
+                            ]
+                        });
+                    }
+
+                    if (service.name === 'ftp') {
+                        results.push({
+                            service: service.name,
+                            port: service.port,
+                            vulnerabilities: [
+                                {
+                                    id: 'CVE-2022-24302',
+                                    severity: 'medium',
+                                    description: 'vsftpd Access Control Bypass'
+                                }
+                            ]
+                        });
+                    }
+
+                    if (service.name === 'ms-wbt-server') {
+                        results.push({
+                            service: service.name,
+                            port: service.port,
+                            vulnerabilities: [
+                                {
+                                    id: 'CVE-2023-21823',
+                                    severity: 'high',
+                                    description: 'Windows Remote Desktop Protocol (RDP) Remote Code Execution'
+                                },
+                                {
+                                    id: 'BlueKeep',
+                                    severity: 'critical',
+                                    description: 'Remote Desktop Services Remote Code Execution Vulnerability'
+                                }
+                            ]
+                        });
+                    }
+                });
+
+                return results;
+            }
+        }
+
+        // Helper function to display vulnerability results
+        function displayVulnerabilityResults(results, resultElement) {
+            if (results.length === 0) {
+                resultElement.innerHTML += "<div class='text-green-500 mb-4'>No known vulnerabilities detected.</div>";
+                return;
+            }
+
+            let vulnHtml = `<div class='mb-4'>
+                <h3 class='font-bold text-lg text-red-600'>Found ${results.length} services with vulnerabilities:</h3>
+            `;
+
+            results.forEach(result => {
+                const vulnCount = result.vulnerabilities.length;
+                vulnHtml += `
+                    <div class='mt-4 p-4 border border-red-200 rounded-lg'>
+                        <h4 class='font-bold'>${result.service.toUpperCase()} (Port ${result.port}) - ${vulnCount} ${vulnCount === 1 ? 'vulnerability' : 'vulnerabilities'}</h4>
+                        <ul class='mt-2 list-disc pl-5'>
+                            ${result.vulnerabilities.map(vuln => `
+                                <li class='mb-2'>
+                                    <span class='font-bold ${getSeverityColor(vuln.severity)}'>${vuln.id}</span>
+                                    <span class='text-sm ${getSeverityBadgeColor(vuln.severity)} px-2 py-0.5 rounded ml-2'>${vuln.severity.toUpperCase()}</span>
+                                    <p class='text-sm mt-1'>${vuln.description}</p>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
+            });
+
+            vulnHtml += `</div>
+                <div class='mt-6 p-4 bg-blue-50 rounded-lg'>
+                    <h3 class='font-bold text-lg'>Recommendations:</h3>
+                    <ul class='mt-2 list-disc pl-5'>
+                        <li>Update all services to their latest secure versions</li>
+                        <li>Configure firewalls to restrict access to necessary ports only</li>
+                        <li>Apply security patches for identified vulnerabilities</li>
+                        <li>Consider implementing intrusion detection systems</li>
+                    </ul>
+                </div>
+            `;
+
+            resultElement.innerHTML += vulnHtml;
+        }
+
+        // Helper function to get color based on severity
+        function getSeverityColor(severity) {
+            switch (severity.toLowerCase()) {
+                case 'critical': return 'text-purple-600';
+                case 'high': return 'text-red-600';
+                case 'medium': return 'text-orange-500';
+                case 'low': return 'text-yellow-500';
+                default: return 'text-gray-600';
+            }
+        }
+
+        // Helper function to get badge color based on severity
+        function getSeverityBadgeColor(severity) {
+            switch (severity.toLowerCase()) {
+                case 'critical': return 'bg-purple-100 text-purple-800';
+                case 'high': return 'bg-red-100 text-red-800';
+                case 'medium': return 'bg-orange-100 text-orange-800';
+                case 'low': return 'bg-yellow-100 text-yellow-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        // Vulnerability scanner launcher
+        document.getElementById("scanInNewWindowBtn").addEventListener("click", function() {
+            const ipAddress = document.getElementById("ipAddress").value;
+            const baseUrl = "http://localhost:8502/"; // Point to your Streamlit app
+
+            // If an IP is provided, pre-populate it in the scanner
+            const url = ipAddress ? `${baseUrl}?ip=${encodeURIComponent(ipAddress)}` : baseUrl;
+
+            window.open(url, "_blank");
+        });
+
+        // Button to start vulnerability scan from the UI
+        document.getElementById("checkVulnBtn").addEventListener("click", function() {
+            const ipAddress = document.getElementById("ipAddress").value;
+            scanForVulnerabilities(ipAddress);
+        });
+
+        // Quick workflow button - resolves domain and prepares for scan
+        document.getElementById("quickScanBtn").addEventListener("click", async function() {
+            const domain = document.getElementById("domain").value;
+
+            if (!domain) {
+                document.getElementById("result").textContent = "Please enter a domain first!";
+                return;
+            }
+
+            // Show loading
+            document.getElementById("loadingDNS").classList.remove("hidden");
+            document.getElementById("result").textContent = "Processing...";
+
+            try {
+                // Resolve DNS
+                const url = `https://dns.google/resolve?name=${domain}&type=A`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.Answer && data.Answer.length > 0) {
+                    // Take the first IP address
+                    const firstIP = data.Answer[0].data;
+
+                    // Update both fields
+                    document.getElementById("result").innerHTML = `<div class="p-2 bg-green-100 text-green-700 rounded-lg">
+                        <i class="fas fa-check-circle mr-1"></i> Resolved ${domain} to ${firstIP}
+                    </div>`;
+                    document.getElementById("ipAddress").value = firstIP;
+
+                    // Start vulnerability scan automatically
+                    document.getElementById("loadingDNS").classList.add("hidden");
+                    scanForVulnerabilities(firstIP);
+                } else {
+                    document.getElementById("result").textContent = "Could not resolve domain to an IP address.";
+                    document.getElementById("loadingDNS").classList.add("hidden");
+                }
+            } catch (error) {
+                document.getElementById("result").textContent = "Error in workflow: " + error.message;
+                document.getElementById("loadingDNS").classList.add("hidden");
+            }
+        });
+    </script>
+</body>
+</html>

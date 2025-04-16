@@ -1,3 +1,4 @@
+#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
 import streamlit as st
 import openai
 import os
@@ -22,7 +23,7 @@ st.set_page_config(
 )
 
 # Set your OpenAI API Key
-openai_api_key = ""  # Replace with your OpenAI key
+openai_api_key = "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"  # Replace with your OpenAI key
 client = openai.OpenAI(api_key=openai_api_key)
 
 # Custom CSS for better embedding
@@ -154,7 +155,7 @@ Here is the scan report content:
 {text_data[:3000]}"""
 
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are a cybersecurity expert specializing in vulnerability assessment."},
                 {"role": "user", "content": prompt}

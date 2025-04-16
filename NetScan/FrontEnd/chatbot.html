@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NetScanner>_ | Nmap Analyzer</title>
+    <title>NexScanner>_ | Nmap Analyzer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -474,7 +474,7 @@
 
     <div class="page-header">
         <div class="container text-center">
-            <h1><i class="fas fa-radar me-2"></i><span class="logo-text">NetScanner>_</span></h1>
+            <h1><i class="fas fa-radar me-2"></i><span class="logo-text">NexScanner>_</span></h1>
             <p class="mb-0">Turn your Nmap scans into actionable insights</p>
             
             <nav class="main-nav" id="mainNav">
@@ -492,7 +492,7 @@
         <div class="row mb-4">
             <div class="col-12 text-center">
                 <!-- Single Test Scan Report Button -->
-                <a href="http://localhost:8501/" class="btn btn-success btn-lg px-4 py-3">
+                <a href="http://localhost:8503/" class="btn btn-success btn-lg px-4 py-3">
                     <i class="fas fa-vial me-2"></i> Test Scan Report
                 </a>
             </div>
@@ -510,7 +510,7 @@
                             <!-- Messages will be added here via JS -->
                             <div class="chat-message ai-message">
                                 <div class="message-bubble">
-                                    Hello! I'm your NetScanner AI Assistant. How can I help you analyze your network security today?
+                                    Hello! I'm your NexScanner>_ AI Assistant. How can I help you analyze your network security today?
                                 </div>
                                 <div class="message-time">Today, 12:00 PM</div>
                             </div>
@@ -566,7 +566,7 @@
 
     <footer class="text-center py-4 text-light">
         <div class="container">
-            <p class="mb-0">NetScanner>_ &copy; 2025 | The Ultimate Nmap Analyzer</p>
+            <p class="mb-0">NexScanner>_ &copy; 2025 | The Ultimate Nmap Analyzer</p>
         </div>
     </footer>
 
@@ -624,7 +624,7 @@
         let chatMessages = [
             {
                 role: 'ai',
-                content: 'Hello! I\'m your NetScanner AI Assistant. How can I help you analyze your network security today?',
+                content: 'Hello! I\'m your NexScanner>_ AI Assistant. How can I help you analyze your network security today?',
                 timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             }
         ];
@@ -675,7 +675,7 @@
         // Replace the existing handleUserInput function with this one
 
 // API Configuration
-const API_KEY = ""; // Replace with your actual API key
+const API_KEY = "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"; // Replace with your actual API key
 const API_URL = "https://api.openai.com/v1/chat/completions";
 
 // Function to handle user input with real AI responses
@@ -715,11 +715,11 @@ async function handleUserInput() {
                 'Authorization': `Bearer ${API_KEY}`
             },
             body: JSON.stringify({
-                model: "gpt-3.5-turbo",
+                model: "gpt-4o",
                 messages: [
                     {
                         role: "system",
-                        content: "You are NetScanner AI Assistant, a helpful expert in network security and vulnerability analysis. Provide concise, practical advice related to network scanning, security vulnerabilities, and remediation steps."
+                        content: "You are NexScanner>_ AI Assistant, a helpful expert in network security and vulnerability analysis. Provide concise, practical advice related to network scanning, security vulnerabilities, and remediation steps."
                     },
                     ...conversationHistory
                 ],
@@ -776,16 +776,16 @@ chatInput.addEventListener('keypress', (e) => {
         function exportChat() {
             // Create chat export content
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const filename = `netscanner-chat-${timestamp}.txt`;
+            const filename = `nexscanner-chat-${timestamp}.txt`;
             
-            let content = "===== NETSCANNER AI ASSISTANT CHAT LOG =====\n\n";
+            let content = "===== NEXSCANNER>_ AI ASSISTANT CHAT LOG =====\n\n";
             
             chatMessages.forEach(msg => {
                 const role = msg.role === 'user' ? 'You' : 'AI Assistant';
                 content += `[${msg.timestamp}] ${role}:\n${msg.content}\n\n`;
             });
             
-            content += "Generated by NetScanner>_ | " + new Date().toLocaleString();
+            content += "Generated by NexScanner>_ | " + new Date().toLocaleString();
             
             // Create download link
             const blob = new Blob([content], { type: 'text/plain' });

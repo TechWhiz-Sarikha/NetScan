@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scan - NetScanner</title>
+    <title>Scan - NexScanner>_</title>
     <style>
         /* Base styles */
         :root {
@@ -238,12 +238,32 @@
         .details-table th {
             background-color: var(--bg-secondary);
         }
+        .scan-button {
+            background: linear-gradient(45deg, #ff3c3c, #ff9900);
+            color: white;
+            font-size: 18px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 60, 60, 0.6);
+            transition: all 0.3s ease;
+          }
+      
+          .scan-button i {
+            align-items: centre;
+          }
+      
+          .scan-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 100, 0, 0.8);
+          }
     </style>
 </head>
 <body class="light-mode">
     <!-- Header -->
     <header>
-        <h1 class="logo"><span class="green-text">NetScanner>_</span></h1>
+        <h1 class="logo"><span class="green-text">NexScanner>_</span></h1>
         <div class="nav-container">
             <nav>
                 <a href="NetScanner.html">Home</a>
@@ -307,6 +327,9 @@
             </div>
             <div class="results-content">Results will appear here...</div>
         </div>
+        <button class="scan-button" onclick="location.href='vuln.html'">
+            <i class="fas fa-triangle-exclamation"></i> Vulnerability Detector
+        </button>
     </div>
 
     <script>
