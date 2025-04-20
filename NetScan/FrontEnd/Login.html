@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>NexScanner>_ - Login Modal</title>
+    <title>NexScanner>_ - Secure Login Modal</title>
     <style>
         /* Modal Styles */
         .modal {
@@ -14,7 +14,7 @@
             height: 100%;
             overflow: auto;
             background-color: rgba(0,0,0,0.5);
-            display: flex;  /* Changed from none to flex */
+            display: flex;
             justify-content: center;
             align-items: center;
         }
@@ -76,11 +76,34 @@
         .login-btn:hover {
             background-color: #45a049;
         }
+
+        .password-strength {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #777;
+        }
+
+        .strength-meter {
+            height: 4px;
+            width: 100%;
+            background-color: #e0e0e0;
+            margin-top: 3px;
+        }
+
+        .strength-meter div {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .weak { background-color: #ff4d4d; }
+        .medium { background-color: #ffaa00; }
+        .strong { background-color: #00cc44; }
     </style>
 </head>
 <body>
     <!-- Demo button to show modal (optional) -->
-    <button id="showLoginModal">Show Login Modal</button>
+    <button id="showLoginModal">Show Secure Login Modal</button>
 
     <!-- Login Modal -->
     <div id="loginModal" class="modal">
@@ -92,22 +115,137 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" required>
+                    <input type="text" id="username" required autocomplete="username">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" required>
+                    <input type="password" id="password" required autocomplete="current-password">
+                    <div class="password-strength">Password strength: <span id="strength-text">Not entered</span></div>
+                    <div class="strength-meter">
+                        <div id="strength-meter-bar"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe" style="display: inline;">Remember me</label>
                 </div>
                 <button type="submit" class="login-btn">Log In</button>
             </form>
         </div>
     </div>
 
+    <!-- Include bcrypt.js and crypto-js libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    
     <script>
         // Modal functionality
         const loginModal = document.getElementById('loginModal');
         const closeModalBtn = document.querySelector('.close');
         const showLoginModalBtn = document.getElementById('showLoginModal');
+        const passwordInput = document.getElementById('password');
+        const strengthText = document.getElementById('strength-text');
+        const strengthMeterBar = document.getElementById('strength-meter-bar');
+
+        // Security settings
+        const SALT_ROUNDS = 10;
+        const AES_SECRET_KEY = generateRandomKey(32); // 256-bit key for AES
+        
+        // Function to generate random cryptographic key
+        function generateRandomKey(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+            let result = '';
+            const randomValues = new Uint32Array(length);
+            window.crypto.getRandomValues(randomValues);
+            
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(randomValues[i] % chars.length);
+            }
+            return result;
+        }
+
+        // Function to encrypt data using AES
+        function encryptData(data, secretKey) {
+            return CryptoJS.AES.encrypt(data, secretKey).toString();
+        }
+
+        // Function to decrypt data using AES
+        function decryptData(encryptedData, secretKey) {
+            const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+            return bytes.toString(CryptoJS.enc.Utf8);
+        }
+
+        // Function to hash password using bcrypt
+        async function hashPassword(password) {
+            try {
+                const salt = await bcrypt.genSalt(SALT_ROUNDS);
+                const hash = await bcrypt.hash(password, salt);
+                return hash;
+            } catch (error) {
+                console.error('Error hashing password:', error);
+                return null;
+            }
+        }
+
+        // Function to verify password using bcrypt
+        async function verifyPassword(password, hash) {
+            try {
+                return await bcrypt.compare(password, hash);
+            } catch (error) {
+                console.error('Error verifying password:', error);
+                return false;
+            }
+        }
+
+        // Function to check password strength
+        function checkPasswordStrength(password) {
+            if (!password) {
+                updateStrengthIndicator(0, 'Not entered');
+                return;
+            }
+            
+            let strength = 0;
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasLowercase = /[a-z]/.test(password);
+            const hasNumbers = /[0-9]/.test(password);
+            const hasSpecialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+            
+            // Calculate strength based on criteria
+            if (password.length >= 8) strength += 1;
+            if (password.length >= 12) strength += 1;
+            if (hasUppercase) strength += 1;
+            if (hasLowercase) strength += 1;
+            if (hasNumbers) strength += 1;
+            if (hasSpecialChars) strength += 1;
+            
+            // Update strength indicator
+            if (strength <= 2) {
+                updateStrengthIndicator(25, 'Weak');
+            } else if (strength <= 4) {
+                updateStrengthIndicator(50, 'Medium');
+            } else {
+                updateStrengthIndicator(100, 'Strong');
+            }
+        }
+
+        // Update strength indicator UI
+        function updateStrengthIndicator(percentage, text) {
+            strengthMeterBar.style.width = percentage + '%';
+            strengthText.textContent = text;
+            
+            // Remove existing classes
+            strengthMeterBar.classList.remove('weak', 'medium', 'strong');
+            
+            // Add appropriate class
+            if (text === 'Weak') strengthMeterBar.classList.add('weak');
+            else if (text === 'Medium') strengthMeterBar.classList.add('medium');
+            else if (text === 'Strong') strengthMeterBar.classList.add('strong');
+        }
+
+        // Password input event listener for real-time strength checking
+        passwordInput.addEventListener('input', function() {
+            checkPasswordStrength(this.value);
+        });
 
         // Function to close modal
         function closeLoginModal() {
@@ -132,16 +270,101 @@
             }
         });
 
-        // Optional: Login form submission handler
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        // Secure login form submission handler
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
             
-            // Here you would typically add login authentication logic
-            console.log('Login attempted with:', username);
-            closeLoginModal();
+            // Implement secure login flow
+            try {
+                // In a real application, you would fetch the user's stored hash from the server
+                // For demo purposes, we'll create a hash and then verify against it
+                const hashedPassword = await hashPassword(password);
+                
+                // Simulate server verification
+                const isVerified = await verifyPassword(password, hashedPassword);
+                
+                if (isVerified) {
+                    console.log('Login successful for user:', username);
+                    
+                    // If remember me is checked, store encrypted credentials
+                    if (rememberMe) {
+                        const userData = JSON.stringify({
+                            username: username,
+                            loginTime: new Date().toISOString()
+                        });
+                        
+                        // Encrypt user data before storing
+                        const encryptedData = encryptData(userData, AES_SECRET_KEY);
+                        
+                        // Store in localStorage (in a real app, use secure HTTP-only cookies instead)
+                        localStorage.setItem('nexscannerAuth', encryptedData);
+                    }
+                    
+                    // Reset form and close modal
+                    document.getElementById('loginForm').reset();
+                    closeLoginModal();
+                    
+                    // Optional: Redirect to dashboard or other secured page
+                    // window.location.href = '/dashboard';
+                } else {
+                    console.error('Login verification failed');
+                    alert('Invalid username or password. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error during login:', error);
+                alert('An error occurred during login. Please try again.');
+            }
         });
+
+        // Check if user has saved credentials on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedAuth = localStorage.getItem('nexscannerAuth');
+            
+            if (savedAuth) {
+                try {
+                    // Decrypt the stored data
+                    const decryptedData = decryptData(savedAuth, AES_SECRET_KEY);
+                    const userData = JSON.parse(decryptedData);
+                    
+                    // Check if the saved data is valid and not expired
+                    const loginTime = new Date(userData.loginTime);
+                    const currentTime = new Date();
+                    const timeDiff = (currentTime - loginTime) / (1000 * 60 * 60); // difference in hours
+                    
+                    // Auto-fill username if login was within the last 24 hours
+                    if (timeDiff < 24) {
+                        document.getElementById('username').value = userData.username;
+                        document.getElementById('rememberMe').checked = true;
+                    } else {
+                        // Clear expired data
+                        localStorage.removeItem('nexscannerAuth');
+                    }
+                } catch (error) {
+                    console.error('Error processing saved authentication:', error);
+                    localStorage.removeItem('nexscannerAuth');
+                }
+            }
+        });
+
+        // Implement CSRF protection token
+        function generateCSRFToken() {
+            return CryptoJS.lib.WordArray.random(16).toString();
+        }
+
+        // Add CSRF token to form before submission
+        const csrfToken = generateCSRFToken();
+        const form = document.getElementById('loginForm');
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrf_token';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+
+        // Store CSRF token in session storage
+        sessionStorage.setItem('csrf_token', csrfToken);
     </script>
 </body>
 </html>

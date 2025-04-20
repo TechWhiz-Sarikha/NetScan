@@ -511,7 +511,7 @@
         // Vulnerability scanner launcher
         document.getElementById("scanInNewWindowBtn").addEventListener("click", function() {
             const ipAddress = document.getElementById("ipAddress").value;
-            const baseUrl = "http://localhost:8502/"; // Point to your Streamlit app
+            const baseUrl = "http://localhost:8501/"; // Point to your Streamlit app
 
             // If an IP is provided, pre-populate it in the scanner
             const url = ipAddress ? `${baseUrl}?ip=${encodeURIComponent(ipAddress)}` : baseUrl;

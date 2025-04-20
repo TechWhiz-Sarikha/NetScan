@@ -1,7 +1,7 @@
-#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
 import streamlit as st
 import openai
 import os
+from dotenv import load_dotenv
 import json
 import pandas as pd
 import docx
@@ -10,6 +10,9 @@ from streamlit_lottie import st_lottie
 import requests
 from datetime import datetime
 from pathlib import Path
+
+# Load environment variables from the .env file
+load_dotenv()
 
 # Check if running in embedded mode
 is_embedded = "embedded" in st.query_params
@@ -22,11 +25,16 @@ st.set_page_config(
     initial_sidebar_state="collapsed" if is_embedded else "auto"
 )
 
-# Set your OpenAI API Key
-openai_api_key = "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"  # Replace with your OpenAI key
-client = openai.OpenAI(api_key=openai_api_key)
+# Retrieve OpenAI API Key from environment variables
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
-# Custom CSS for better embedding
+if openai_api_key is None:
+    st.error("API Key is not set in the .env file")
+else:
+    openai.api_key = openai_api_key
+    client = openai.OpenAI(api_key=openai_api_key)
+    # Continue with your application logic here
+
 st.markdown("""
     <style>
     /* General styles */
@@ -107,7 +115,7 @@ def load_lottie_url(url: str):
 
 # Conditional animation based on whether we're embedded
 if not is_embedded:
-    st.markdown('<div class="title">🛡️ Vulnerability NetScanner AI</div>', unsafe_allow_html=True)
+    st.markdown('<div class="title">🛡️ Analyze Your Report Here👇 </div>', unsafe_allow_html=True)
     st.markdown('<div class="sub">Upload your scan report for AI-powered analysis</div>', unsafe_allow_html=True)
     
     # Only show animation if not embedded
