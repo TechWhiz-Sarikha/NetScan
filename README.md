@@ -67,17 +67,6 @@ This project is a user-friendly, web-based network scanner and vulnerability ana
 
 ---
 
-## 📷 Screenshots
-
-> *(Add screenshots in the `/assets` folder and link them here)*
-
-| Quick Scan | Deep Scan + AI Chatbot |
-|------------|-------------------------|
-| ![Quick Scan](assets/quick_scan.png) | ![Deep Scan](assets/deep_scan.png) |
-
-
----
-
 ## 🔧 Installation Instructions
 
 ### Prerequisites
@@ -87,13 +76,14 @@ This project is a user-friendly, web-based network scanner and vulnerability ana
 
 ### Steps
 
-```bash
 git clone https://github.com/your-username/network-vuln-scanner.git
 cd network-vuln-scanner
 python3 -m venv venv
 source venv/bin/activate  # On Windows use venv\Scripts\activate
 pip install -r requirements.txt
 python run.py
+
+---
 
 ## 📑 Report Generation
 
@@ -140,21 +130,7 @@ It answers questions like:
 ## 📜 License
 
 This project is licensed under the **MIT License**.  
-See the [LICENSE](LICENSE) file for more details.
 
----
-
-## 👥 Contributors
-
-- **Sarikha S** – 2212012  
-- **Sri Gomathi R** – 2212013  
-- **Aruna Varshini S** – 2212019  
-
-**Department of Computer Science and Engineering**  
-National Engineering College, Kovilpatti
-
-**Supervisor:** Dr. J. Naskath, M.E., Ph.D.  
-Associate Professor, CSE
 
 
 
