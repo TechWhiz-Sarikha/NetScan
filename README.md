@@ -76,12 +76,12 @@ This project is a user-friendly, web-based network scanner and vulnerability ana
 
 ### Steps
 
-git clone https://github.com/your-username/network-vuln-scanner.git
-cd network-vuln-scanner
-python3 -m venv venv
-source venv/bin/activate  # On Windows use venv\Scripts\activate
-pip install -r requirements.txt
-python run.py
+- git clone https://github.com/your-username/network-vuln-scanner.git
+- cd network-vuln-scanner
+- python3 -m venv venv
+- source venv/bin/activate  # On Windows use venv\Scripts\activate
+- pip install -r requirements.txt
+- python run.py
 
 ---
 
